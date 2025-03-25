@@ -1,0 +1,47 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Data files (uncomment if needed)
+# data/
+# *.csv
+# *.json
+# *.pkl
+
+# Model files (uncomment if needed)
+# models/
+# *.h5
+# *.pt
+# *.pth
+
+# Logs
+logs/
+*.log
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Local configuration
+.env
+.env.local
