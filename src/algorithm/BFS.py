@@ -1,4 +1,5 @@
-from General import Node, QueueFrontier, State
+from src.algorithm.General import Node, QueueFrontier, State
+from src.config import STEP_SIZE    
 
 class BFS():
     def __init__(self, walls):
@@ -9,10 +10,10 @@ class BFS():
 
         # All possible action
         candidates = [
-            ("U", (row - 1, col)),
-            ("D", (row + 1, col)),
-            ("L", (row, col - 1)),
-            ("R", (row, col + 1))
+            ("U", (row - STEP_SIZE, col)),
+            ("D", (row + STEP_SIZE, col)),
+            ("L", (row, col - STEP_SIZE)),
+            ("R", (row, col + STEP_SIZE))
         ]
 
         # Ensure actions are valid

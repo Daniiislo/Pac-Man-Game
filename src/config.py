@@ -5,6 +5,7 @@ NUM_ROWS = 42
 NUM_COLS = 36
 PACMAN = (32, 32)
 GHOST = (32, 32)
+FPS = 60
 
 MAP_FILE = 'pacmanmap.json'
 
@@ -21,3 +22,5 @@ ASSETS_MAP = {
 }
 
 ASSETS_PATH = 'assets'
+STEP_SIZE = 2
+

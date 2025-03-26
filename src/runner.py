@@ -7,6 +7,9 @@ from src.config import *
 from src.game.state_management import GameState
 from src.game.event_management import EventHandler
 from src.gui.screen_management import ScreenManager
+
+from src.algorithm.BFS import BFS
+from src.algorithm.General import *
 class GameRun:
     def __init__(self):
         pygame.init()
@@ -39,3 +42,20 @@ class GameRun:
 
         pygame.quit()
         sys.exit()
+        
+
+        #write matrix to txt file
+        with open("matrix.txt", "w") as file:
+            for row in self.game_state.matrix:
+                for cell in row:
+                    file.write(str(cell) + "\t")
+                file.write("\n")
+
+
+        bfs = BFS(self.game_state.matrix)
+
+        startState = State((15, 11))
+        print(bfs.solve(startState, (39, 33)))
+
+        
+        
