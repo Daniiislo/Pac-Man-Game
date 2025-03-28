@@ -1,4 +1,6 @@
 { "compressionlevel":-1,
+ "pacman_start_x":17,
+ "pacman_start_y":23,
  "height":42,
  "infinite":false,
  "layers":[

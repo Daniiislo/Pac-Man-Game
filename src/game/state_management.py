@@ -7,6 +7,8 @@ class GameState:
         self.__running = True
         self.__current_time = None
         self.__matrix = None
+        self.__current_direction = ""
+        self.__next_direction = ""
 
     @property
     def fps(self):
@@ -39,3 +41,19 @@ class GameState:
     @matrix.setter
     def matrix(self, matrix):
         self.__matrix = matrix
+
+    @property
+    def current_direction(self):
+        return self.__current_direction
+    
+    @current_direction.setter
+    def direction(self, direction):
+        self.__current_direction = direction
+
+    @property
+    def next_direction(self):
+        return self.__next_direction
+    
+    @next_direction.setter
+    def next_direction(self, next_direction):
+        self.__next_direction = next_direction

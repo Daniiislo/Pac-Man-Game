@@ -41,21 +41,4 @@ class GameRun:
             dt /= 1000
 
         pygame.quit()
-        sys.exit()
-        
-
-        #write matrix to txt file
-        with open("matrix.txt", "w") as file:
-            for row in self.game_state.matrix:
-                for cell in row:
-                    file.write(str(cell) + "\t")
-                file.write("\n")
-
-
-        bfs = BFS(self.game_state.matrix)
-
-        startState = State((15, 11))
-        print(bfs.solve(startState, (39, 33)))
-
-        
-        
+        sys.exit()    

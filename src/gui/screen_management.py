@@ -1,4 +1,5 @@
 from src.gui.pacman_map import PacmanMap
+from src.sprites.pacman import Pacman
 
 class ScreenManager:
     def __init__(self, screen, game_state, all_sprites):
@@ -7,8 +8,9 @@ class ScreenManager:
         self.all_sprites = all_sprites
         self._map = PacmanMap(self._game_state)
         self._map_surface = self._map.render_map_surface()
+        self.pacman = Pacman(self._screen, self._game_state, self._map.load_pacman_pos())
 
-        self.all_sprites.add()
+        self.all_sprites.add(self.pacman)
 
     def draw_screens(self):
         #draw map surface

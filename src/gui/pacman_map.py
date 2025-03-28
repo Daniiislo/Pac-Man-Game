@@ -23,11 +23,15 @@ class PacmanMap:
         assets = {}
 
         for id, image_file in ASSETS_MAP.items():
-            asset_path = os.path.join(ASSETS_PATH, image_file)
+            asset_path = os.path.join(ASSETS_PATH, "map/", image_file)
             assets[id] = pygame.image.load(asset_path).convert_alpha()
             assets[id] = pygame.transform.scale(assets[id], CELL_SIZE)
         return assets   
 
+    def load_pacman_pos(self):
+        x = self.map_data.get('pacman_start_x', 1)
+        y = self.map_data.get('pacman_start_y', 1)
+        return x, y
 
     def render_map_surface(self):
         for layer in self.map_data.get('layers', []):
