@@ -4,9 +4,10 @@ import pygame
 
 from src.utils.movement_ultils import check_collision, calculate_coords
 from src.sprites.sprite_configs import GHOST_PATHS
-from src.config import GHOST, CELL_SIZE, GHOST_SPEED, STEP_SIZE
+from src.config import GHOST, CELL_SIZE, GHOST_SPEED
 from src.algorithm.General import State
 from src.algorithm.BFS import BFS
+from src.algorithm.DFS import DFS
 
 class Ghost(Sprite, ABC):
     def __init__(self, name, game_state, ghost_pos):
@@ -97,17 +98,19 @@ class Blinky(Ghost):
         
         return self.algorithm.solve(start, goal)
 
-class Blinky(Ghost):
+class Pinky(Ghost):
     def __init__(self, name, game_state, ghost_pos):
         super().__init__(name, game_state, ghost_pos)
-        self.algorithm = BFS(self.matrix)
+        self.algorithm = DFS(self.matrix)
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos):
         start = State(self.ghost_pos)
         goal = target_pos
         
-        return self.algorithm.solve(start, goal)
+        s =  self.algorithm.solve(start, goal)
+        print(s)
+        return s
     
 class Inky(Ghost):
     def __init__(self, name, game_state, ghost_pos):
@@ -140,7 +143,7 @@ class GhostManager:
         self.ghosts_list = []
 
     def load_ghosts(self, ghost_pos_list):
-        ghosts = [('blinky', Blinky), ('pinky', Blinky), ('inky', Inky), ('clyde', Clyde)]
+        ghosts = [('blinky', Blinky), ('pinky', Pinky), ('inky', Inky), ('clyde', Clyde)]
         for ghost_name, ghost_class in ghosts:
             ghost_pos = ghost_pos_list[ghost_name]
             self.ghosts_list.append(ghost_class(ghost_name, self._game_state, ghost_pos))
