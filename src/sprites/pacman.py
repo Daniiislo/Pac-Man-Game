@@ -1,17 +1,17 @@
 import pygame
 from pygame.sprite import Sprite
 
-from src.config import PACMAN, CELL_SIZE, PACMAN_SPEED, SCREEN_HEIGHT, SCREEN_WIDTH
+from src.config import PACMAN, CELL_SIZE, PACMAN_SPEED, STEP_SIZE
 from src.sprites.sprite_configs import PACMAN_PATHS
+from src.utils.movement_ultils import check_collision, calculate_coords
 
 class Pacman(Sprite):
-    def __init__(self, screen, game_state, pacman_pos):
+    def __init__(self, game_state, pacman_pos):
         super().__init__()
-        self.screen = screen
         self.game_state = game_state
         self.pacman_pos = pacman_pos
         self.matrix = game_state.matrix
-        self.pacman_coords = self.caculate_pacman_coords()
+        self.pacman_coords = calculate_coords(self.pacman_pos)
         self.load_all_frames()
         self.load_image()
         self.frame_delay = 5
@@ -49,9 +49,6 @@ class Pacman(Sprite):
         self.image = self.frames[self.current_frame_idx]
         self.rect = self.image.get_rect(topleft=self.pacman_coords)
 
-    def caculate_pacman_coords(self):
-        x, y = self.pacman_pos
-        return x * CELL_SIZE[0], y * CELL_SIZE[1]
     
     def frame_update(self):
         self.frame_delay -= 1
@@ -71,82 +68,46 @@ class Pacman(Sprite):
         if self.game_state.next_direction != "" and (self.next_direction == "" or self.next_direction != self.game_state.next_direction):
             self.next_direction = self.game_state.next_direction
 
-    def move(self): 
-        #if can move to next direction, change direction
-        if self.check_next_direction():
+    def move(self):
+        # check if can move to next direction, change direction
+        if self.next_direction != "" and not check_collision(self.pixel_pos['x'], self.pixel_pos['y'], self.next_direction, PACMAN_SPEED, PACMAN, self.matrix):
             self.move_direction = self.next_direction
             self.next_direction = ""
             self.game_state.next_direction = ""
 
         if self.move_direction == "":
             return
+        
+        # Check if can move in the current direction
+        # If not, stop moving and reset the direction
+        if not check_collision(self.pixel_pos['x'], self.pixel_pos['y'], self.move_direction, PACMAN_SPEED, PACMAN, self.matrix):
 
-        # new position
-        new_pixel_x = self.pixel_pos['x']
-        new_pixel_y = self.pixel_pos['y']
+            if self.move_direction == "l":
+                self.pixel_pos['x'] -= PACMAN_SPEED
+            elif self.move_direction == "r":
+                self.pixel_pos['x'] += PACMAN_SPEED
+            elif self.move_direction == "u":
+                self.pixel_pos['y'] -= PACMAN_SPEED
+            elif self.move_direction == "d":
+                self.pixel_pos['y'] += PACMAN_SPEED
 
-        if self.move_direction == "l":
-            new_pixel_x -= PACMAN_SPEED
-        elif self.move_direction == "r":
-            new_pixel_x += PACMAN_SPEED
-        elif self.move_direction == "u":
-            new_pixel_y -= PACMAN_SPEED
-        elif self.move_direction == "d":
-            new_pixel_y += PACMAN_SPEED
+            self.update_pacman_pos(self.pixel_pos['x'], self.pixel_pos['y'])
 
-        #if new is not colliding, update position
-        if not self.check_collision(new_pixel_x, new_pixel_y):
-            self.pixel_pos['x'] = new_pixel_x
-            self.pixel_pos['y'] = new_pixel_y
-
-            new_x = new_pixel_x // CELL_SIZE[0]
-            new_y = new_pixel_y // CELL_SIZE[1]
-            
-            if abs(new_x - self.pacman_pos[0]) >= 2 or abs(new_y - self.pacman_pos[1]) >= 2:
-                self.pacman_pos = (new_x, new_y)
-            
             # Update rect
             self.pacman_coords = (self.pixel_pos['x'], self.pixel_pos['y'])
             self.rect.topleft = self.pacman_coords
         else:
             self.move_direction = ""
             self.next_direction = ""
+            self.game_state.next_direction = ""
 
+    def update_pacman_pos(self, pixel_x, pixel_y):
+        new_x = pixel_x // CELL_SIZE[0]
+        new_y = pixel_y // CELL_SIZE[1]
 
-    def check_collision(self, pixel_x, pixel_y):
-        """Check if the next position collides with walls or out of bounds."""
-        top_left = (pixel_x , pixel_y)
-        top_right = (pixel_x + PACMAN[0] - 1, pixel_y)
-        bottom_left = (pixel_x, pixel_y + PACMAN[1] - 1)
-        bottom_right = (pixel_x + PACMAN[0] - 1, pixel_y + PACMAN[1] - 1)
-        
-        for pos in [top_left, top_right, bottom_left, bottom_right]:
-            if pos[0] < 0 or pos[1] < 0 or pos[0] >= SCREEN_WIDTH or pos[1] >= SCREEN_HEIGHT:
-                return True
-
-            if self.matrix[pos[1] // CELL_SIZE[1]][pos[0] // CELL_SIZE[0]] == 1:
-                return True
-
-        return False
-
-    def check_next_direction(self):
-        """Check if the next position can be go with the next direction."""
-        if self.next_direction == "":
-            return False
-
-        new_pixel_x = self.pixel_pos['x']
-        new_pixel_y = self.pixel_pos['y']
-        if self.next_direction == "l":
-            new_pixel_x -= PACMAN_SPEED
-        elif self.next_direction == "r":
-            new_pixel_x += PACMAN_SPEED
-        elif self.next_direction == "u":
-            new_pixel_y -= PACMAN_SPEED
-        elif self.next_direction == "d":
-            new_pixel_y += PACMAN_SPEED
-
-        return not self.check_collision(new_pixel_x, new_pixel_y)
-
+        if abs(new_x - self.pacman_pos[0]) >= STEP_SIZE or abs(new_y - self.pacman_pos[1]) >= STEP_SIZE:
+            self.pacman_pos = (new_x, new_y)
+            self.game_state.pacman_pos = self.pacman_pos
     
     def update(self, dt):
         self.update_next_direction()

@@ -9,6 +9,7 @@ class GameState:
         self.__matrix = None
         self.__current_direction = ""
         self.__next_direction = ""
+        self.__pacman_pos = None
 
     @property
     def fps(self):
@@ -57,3 +58,11 @@ class GameState:
     @next_direction.setter
     def next_direction(self, next_direction):
         self.__next_direction = next_direction
+
+    @property
+    def pacman_pos(self):
+        return self.__pacman_pos
+    
+    @pacman_pos.setter
+    def pacman_pos(self, pacman_pos):
+        self.__pacman_pos = pacman_pos

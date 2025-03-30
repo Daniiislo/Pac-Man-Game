@@ -6,23 +6,24 @@ class BFS():
         self.walls = walls
         
     def neighbors(self, state):
-        row , col = state.current_position
+        # ensure int
+        x, y = state.current_position
 
         # All possible action
         candidates = [
-            ("U", (row - STEP_SIZE, col)),
-            ("D", (row + STEP_SIZE, col)),
-            ("L", (row, col - STEP_SIZE)),
-            ("R", (row, col + STEP_SIZE))
+            ("u", (x, y - STEP_SIZE)),
+            ("d", (x, y + STEP_SIZE)),
+            ("l", (x - STEP_SIZE, y)),
+            ("r", (x + STEP_SIZE, y))
         ]
 
         # Ensure actions are valid
         result = []
 
-        for action, (r, c) in candidates:
+        for action, (x, y) in candidates:
             try:
-                if not self.walls[r][c]:
-                    result.append((action, (r, c)))
+                if not self.walls[y][x]:
+                    result.append((action, (x, y)))
             except IndexError:
                 continue
 
@@ -47,7 +48,7 @@ class BFS():
 
             # If nothing left in frontier, then no path
             if frontier.empty():
-                raise Exception("no solution")
+                return []
             
             # Choose a node from the frontier
             node = frontier.remove()

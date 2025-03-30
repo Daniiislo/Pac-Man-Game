@@ -6,6 +6,7 @@ NUM_COLS = 36
 PACMAN = (32, 32)
 PACMAN_SPEED = 2
 GHOST = (32, 32)
+GHOST_SPEED = 1
 FPS = 60
 
 MAP_FILE = 'pacmanmap.json'

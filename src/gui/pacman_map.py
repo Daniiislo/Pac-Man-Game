@@ -33,6 +33,16 @@ class PacmanMap:
         y = self.map_data.get('pacman_start_y', 1)
         return x, y
 
+    def load_ghosts_pos(self):
+        ghosts = {}
+        for ghost_name, ghost_data in self.map_data.get('ghosts', {}).items():
+            x = ghost_data.get('start_x', 1)
+            y = ghost_data.get('start_y', 1)
+            ghosts[ghost_name] = (x, y)
+        return ghosts
+
+        
+
     def render_map_surface(self):
         for layer in self.map_data.get('layers', []):
             x_offset = layer.get('x', 0)
