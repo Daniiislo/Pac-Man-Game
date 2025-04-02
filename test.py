@@ -1,5 +1,5 @@
 from src.algorithm.DFS import DFS
-from src.algorithm.General import State
+from src.utils.algorithm_utils import State
 
 # read maze from file matrix.txt
 walls = []

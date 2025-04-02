@@ -1,4 +1,4 @@
-from src.algorithm.General import Node, QueueFrontier, State
+from src.utils.algorithm_utils import Node, QueueFrontier, State
 from src.config import STEP_SIZE    
 
 class BFS():
@@ -25,19 +25,27 @@ class BFS():
         max_y = len(self.walls) - 1
 
         for action, (x, y) in candidates:
+            isValid = True
             if 0 <= x <= max_x and 0 <= y <= max_y:
-                if action=="u":
-                    if not self.walls[y][x] and not self.walls[y+1][x]:
-                        result.append((action, (x, y)))
-                elif action=="d":
-                    if not self.walls[y][x] and not self.walls[y-1][x]:
-                        result.append((action, (x, y)))
-                elif action=="l":
-                    if not self.walls[y][x] and not self.walls[y][x+1]:
-                        result.append((action, (x, y)))
-                elif action=="r":
-                    if not self.walls[y][x] and not self.walls[y][x-1]:
-                        result.append((action, (x, y)))
+                for i in range(STEP_SIZE):
+                    if not isValid:
+                        break
+                    for j in range(STEP_SIZE):
+                        # Check if position is out of bounds
+                        if y + i > max_y or x + j > max_x or y + i < 0 or x + j < 0:
+                            isValid = False
+                            break
+                        
+                        # Check if there's a wall
+                        if self.walls[y + i][x + j]:
+                            isValid = False
+                            break
+            else:
+                isValid = False
+                
+            if isValid:
+                result.append((action, (x, y)))
+
         return result
 
     

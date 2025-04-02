@@ -1,6 +1,6 @@
 from src.gui.pacman_map import PacmanMap
 from src.sprites.pacman import Pacman
-from src.sprites.Ghost import GhostManager
+from src.sprites.ghost import GhostManager
 class ScreenManager:
     def __init__(self, screen, game_state, all_sprites):
         self._screen = screen

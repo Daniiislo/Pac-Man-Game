@@ -8,8 +8,6 @@ from src.game.state_management import GameState
 from src.game.event_management import EventHandler
 from src.gui.screen_management import ScreenManager
 
-from src.algorithm.BFS import BFS
-from src.algorithm.General import *
 class GameRun:
     def __init__(self):
         pygame.init()

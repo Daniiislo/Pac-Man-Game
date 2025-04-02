@@ -5,7 +5,7 @@ import pygame
 from src.utils.movement_ultils import check_collision, calculate_coords
 from src.sprites.sprite_configs import GHOST_PATHS
 from src.config import GHOST, CELL_SIZE, GHOST_SPEED, STEP_SIZE
-from src.algorithm.General import State
+from src.utils.algorithm_utils import State
 from src.algorithm.BFS import BFS
 from src.algorithm.DFS import DFS
 
@@ -135,9 +135,10 @@ class Pinky(Ghost):
         start = State(self.ghost_pos)
         goal = target_pos
         
-        s =  self.algorithm.solve(start, goal)
-        print (s)
+        s = self.algorithm.solve(start, goal)
+        print(s)
         return s
+
     
 class Inky(Ghost):
     def __init__(self, name, game_state, ghost_pos):
@@ -170,8 +171,7 @@ class GhostManager:
         self.ghosts_list = []
 
     def load_ghosts(self, ghost_pos_list):
-        #ghosts = [('blinky', Blinky), ('pinky', Pinky), ('inky', Inky), ('clyde', Clyde)]
-        ghosts = [('pinky', Pinky)]
+        ghosts = [('blinky', Blinky), ('pinky', Pinky), ('inky', Inky), ('clyde', Clyde)]
         for ghost_name, ghost_class in ghosts:
             ghost_pos = ghost_pos_list[ghost_name]
             self.ghosts_list.append(ghost_class(ghost_name, self._game_state, ghost_pos))
