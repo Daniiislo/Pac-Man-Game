@@ -16,11 +16,12 @@ with open('matrix.txt', 'r') as f:
         walls.append(row)
 
 
+
 print (walls)
 dfs = DFS(walls)
 
-start = State((1, 1))
+start = State((3,33))
 
-end = (15, 1)
+end = (31,1)
 
 print(dfs.solve(start, end))

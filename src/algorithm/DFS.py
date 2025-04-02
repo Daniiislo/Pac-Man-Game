@@ -19,14 +19,24 @@ class DFS():
 
         # Ensure actions are valid
         result = []
+        # Get max boundaries of the grid
+        max_x = len(self.walls[0]) - 1
+        max_y = len(self.walls) - 1
 
         for action, (x, y) in candidates:
-            try:
-                if not self.walls[y][x]:
-                    result.append((action, (x, y)))
-            except IndexError:
-                continue
-
+            if 0 <= x <= max_x and 0 <= y <= max_y:
+                if action=="u":
+                    if not self.walls[y][x] and not self.walls[y+1][x]:
+                        result.append((action, (x, y)))
+                elif action=="d":
+                    if not self.walls[y][x] and not self.walls[y-1][x]:
+                        result.append((action, (x, y)))
+                elif action=="l":
+                    if not self.walls[y][x] and not self.walls[y][x+1]:
+                        result.append((action, (x, y)))
+                elif action=="r":
+                    if not self.walls[y][x] and not self.walls[y][x-1]:
+                        result.append((action, (x, y)))
         return result
 
     
