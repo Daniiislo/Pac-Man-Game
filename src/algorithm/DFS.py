@@ -1,5 +1,7 @@
 from src.utils.algorithm_utils import Node, StackFrontier, State
 from src.config import STEP_SIZE    
+import time
+import tracemalloc
 
 class DFS():
     def __init__(self, walls):
@@ -50,6 +52,14 @@ class DFS():
 
     
     def solve(self, state: State, goal_position):
+        # Initialize the number of expanded nodes
+        expanded_nodes=0
+
+        # Start time tracking
+        start_time= time.time()
+
+        # Start memory tracking 
+        tracemalloc.start()
 
         # Initial solution to None
         solution = None
@@ -67,10 +77,16 @@ class DFS():
 
             # If nothing left in frontier, then no path
             if frontier.empty():
+                end_time = time.time()
+                current, peak = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
                 return []
             
             # Choose a node from the frontier
             node = frontier.remove()
+
+            # Increment the number of expanded nodes
+            expanded_nodes += 1
 
             # If node is the goal, then we have a solution
             if node.state.current_position == goal_position:
@@ -82,6 +98,18 @@ class DFS():
                     node = node.parent
                 actions.reverse()
                 solution = actions
+
+                # Stop time tracking
+                end_time = time.time()
+
+                # Stop memory tracking
+                current, peak = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+
+                print(f"Search Time: {end_time - start_time:.4f} seconds")
+                print(f"Memory Usage: {current / 1024:.2f} KB (current), {peak / 1024:.2f} KB (peak)")
+                print(f"Expanded Nodes: {expanded_nodes}")
+                
                 return solution
             
             # Mark node as explored
