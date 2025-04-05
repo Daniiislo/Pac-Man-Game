@@ -45,3 +45,7 @@ Thumbs.db
 # Local configuration
 .env
 .env.local
+
+# Vu's files
+AStar_Report.md
+Intro AI - Project 1.pdf

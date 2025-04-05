@@ -8,6 +8,7 @@ from src.config import GHOST, CELL_SIZE, GHOST_SPEED, STEP_SIZE
 from src.utils.algorithm_utils import State
 from src.algorithm.BFS import BFS
 from src.algorithm.DFS import DFS
+from src.algorithm.AStar import AStar
 
 class Ghost(Sprite, ABC):
     def __init__(self, name, game_state, ghost_pos):
@@ -116,7 +117,7 @@ class Ghost(Sprite, ABC):
 class Blinky(Ghost):
     def __init__(self, name, game_state, ghost_pos):
         super().__init__(name, game_state, ghost_pos)
-        self.algorithm = BFS(self.matrix)
+        self.algorithm = AStar(self.matrix)
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos):
@@ -135,9 +136,10 @@ class Pinky(Ghost):
         start = State(self.ghost_pos)
         goal = target_pos
         
-        s = self.algorithm.solve(start, goal)
-        print(s)
-        return s
+        path = self.algorithm.solve(start, goal)
+        if path is None or len(path) == 0:
+            return []
+        return path
 
     
 class Inky(Ghost):
