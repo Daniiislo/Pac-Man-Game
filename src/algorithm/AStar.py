@@ -13,7 +13,7 @@ class PriorityQueue:
         return len(self.elements) == 0
     
     def add(self, item, priority):
-        # Count được sử dụng để đảm bảo thứ tự ổn định khi hai phần tử có priority bằng nhau
+        # Count is used to ensure stable order when two elements have the same priority
         heapq.heappush(self.elements, (priority, self.count, item))
         self.count += 1
     
@@ -75,7 +75,7 @@ class AStar():
         return result
 
     def heuristic(self, a, b):
-        # Sử dụng khoảng cách Manhattan làm hàm heuristic
+        # Use Manhattan distance as heuristic
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
     
     def solve(self, state: State, goal_position):
@@ -95,11 +95,11 @@ class AStar():
         start = Node(state=state, parent=None, action=None, cost=0)
         frontier = PriorityQueue()
         
-        # Thêm node khởi đầu với priority = heuristic(start, goal)
+        # Add start node with priority = heuristic(start, goal)
         start_pos = state.current_position
         frontier.add(start, self.heuristic(start_pos, goal_position))
         
-        # Lưu trữ chi phí đã biết đến mỗi node
+        # Store the known cost to each node
         cost_so_far = {start_pos: 0}
         
         # Initialize an empty explored set
@@ -150,14 +150,14 @@ class AStar():
 
             # Add neighbors to frontier
             for action, position in self.neighbors(node.state):
-                # Tính toán chi phí thực để đi đến vị trí mới (g(n))
-                new_cost = cost_so_far[current_pos] + 1  # Mỗi bước đi có chi phí 1
+                # Calculate the actual cost to reach the new position (g(n))
+                new_cost = cost_so_far[current_pos] + 1  # Each step has a cost of 1
                 
-                # Nếu đây là lần đầu tiên đến position hoặc tìm thấy đường đi tốt hơn
+                # If this is the first time to position or find a better path
                 if position not in cost_so_far or new_cost < cost_so_far[position]:
                     cost_so_far[position] = new_cost
                     
-                    # Tính toán priority = g(n) + h(n)
+                    # Calculate priority = g(n) + h(n)
                     priority = new_cost + self.heuristic(position, goal_position)
                     
                     state = State(current_position=position)

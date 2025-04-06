@@ -136,10 +136,9 @@ class Pinky(Ghost):
         start = State(self.ghost_pos)
         goal = target_pos
         
-        path = self.algorithm.solve(start, goal)
-        if path is None or len(path) == 0:
-            return []
-        return path
+        s = self.algorithm.solve(start, goal)
+        print(s)
+        return s
 
     
 class Inky(Ghost):
