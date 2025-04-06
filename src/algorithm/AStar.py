@@ -1,31 +1,7 @@
-from src.utils.algorithm_utils import Node, State
+from src.utils.algorithm_utils import Node, State, PriorityQueue
 from src.config import STEP_SIZE    
 import time
 import tracemalloc
-import heapq
-
-class PriorityQueue:
-    def __init__(self):
-        self.elements = []
-        self.count = 0
-    
-    def empty(self):
-        return len(self.elements) == 0
-    
-    def add(self, item, priority):
-        # Count is used to ensure stable order when two elements have the same priority
-        heapq.heappush(self.elements, (priority, self.count, item))
-        self.count += 1
-    
-    def contains_state(self, state):
-        return any(state == node.state for _, _, node in self.elements)
-    
-    def remove(self):
-        if self.empty():
-            raise Exception("empty frontier")
-        else:
-            _, _, node = heapq.heappop(self.elements)
-            return node
 
 class AStar():
     def __init__(self, walls):

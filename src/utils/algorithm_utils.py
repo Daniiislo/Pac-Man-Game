@@ -1,4 +1,5 @@
 import sys
+import heapq
 
 class State():
     def __init__(self, current_position):
@@ -46,6 +47,29 @@ class QueueFrontier(StackFrontier):
         else:
             node= self.frontier[0]
             self.frontier = self.frontier[1:]
+            return node
+
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+        self.count = 0
+    
+    def empty(self):
+        return len(self.elements) == 0
+    
+    def add(self, item, priority):
+        # Count is used to ensure stable order when two elements have the same priority
+        heapq.heappush(self.elements, (priority, self.count, item))
+        self.count += 1
+    
+    def contains_state(self, state):
+        return any(state == node.state for _, _, node in self.elements)
+    
+    def remove(self):
+        if self.empty():
+            raise Exception("empty frontier")
+        else:
+            _, _, node = heapq.heappop(self.elements)
             return node
  
 
