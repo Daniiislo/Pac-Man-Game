@@ -9,6 +9,7 @@ from src.utils.algorithm_utils import State
 from src.algorithm.BFS import BFS
 from src.algorithm.DFS import DFS
 from src.algorithm.AStar import AStar
+from src.algorithm.UCS import UniformCostSearch
 
 class Ghost(Sprite, ABC):
     def __init__(self, name, game_state, ghost_pos):
@@ -153,16 +154,16 @@ class Inky(Ghost):
         
         return self.algorithm.solve(start, goal)
     
-class Clyde(Ghost):
+class Clyde(Ghost):  # Con ma cam
     def __init__(self, name, game_state, ghost_pos):
         super().__init__(name, game_state, ghost_pos)
-        self.algorithm = BFS(self.matrix)
+        self.algorithm = UniformCostSearch(self.matrix)  
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos):
         start = State(self.ghost_pos)
         goal = target_pos
-        
+
         return self.algorithm.solve(start, goal)
 
 class GhostManager:
