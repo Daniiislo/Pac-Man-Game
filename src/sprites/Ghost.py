@@ -169,14 +169,25 @@ class Clyde(Ghost):  # Con ma cam
 class GhostManager:
     def __init__(self, game_state):
         self._game_state = game_state
-
         self.ghosts_list = []
+        self.original_pos = {}
+        
+    def set_original_positions(self, ghost_pos_list):
+        """Lưu vị trí ban đầu của các ma"""
+        self.original_pos = ghost_pos_list
 
     def load_ghosts(self, ghost_pos_list):
+        """Tải các ma theo vị trí"""
+        self.original_pos = ghost_pos_list
         ghosts = [('blinky', Blinky), ('pinky', Pinky), ('inky', Inky), ('clyde', Clyde)]
         for ghost_name, ghost_class in ghosts:
             ghost_pos = ghost_pos_list[ghost_name]
             self.ghosts_list.append(ghost_class(ghost_name, self._game_state, ghost_pos))
+        return self.ghosts_list
+        
+    def reset_ghosts(self, ghost_list):
+        """Xóa tất cả ma cũ và thay thế bằng danh sách ma mới"""
+        self.ghosts_list = ghost_list
         return self.ghosts_list
 
 
