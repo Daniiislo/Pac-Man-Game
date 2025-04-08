@@ -19,29 +19,32 @@ class GameRun:
 
     def main(self):
         clock = pygame.time.Clock()
-        dt = None
+        dt = 0
 
         while self.game_state.running:
             self.game_state.current_time = pygame.time.get_ticks()
 
-            for event in pygame.event.get():
-                self.events.handle_events(event)
-
+            # Xử lý sự kiện khi đã bắt đầu game
+            if self.game_state.game_started:
+                for event in pygame.event.get():
+                    self.events.handle_events(event)
+            
             self.screen.fill((0, 0, 0))
             self.gui.draw_screens()
 
-            # Update Pacman separately
-            self.gui.pacman.update(dt)
-            
-            # Update ghosts using the synchronized approach
-            self.gui.ghosts.update_ghosts(dt)
-            
-            # Draw all sprites
-            self.all_sprites.draw(self.screen)
+            # Cập nhật các sprite khi game đã bắt đầu
+            if self.game_state.game_started:
+                # Update Pacman separately
+                self.gui.pacman.update(dt)
+                
+                # Update ghosts using the synchronized approach
+                self.gui.ghosts.update_ghosts(dt)
+                
+                # Draw all sprites
+                self.all_sprites.draw(self.screen)
             
             pygame.display.flip()
-            dt = clock.tick(self.game_state.fps)
-            dt /= 1000
+            dt = clock.tick(self.game_state.fps) / 1000
 
         pygame.quit()
         sys.exit()    

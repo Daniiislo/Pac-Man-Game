@@ -1,6 +1,6 @@
 { "compressionlevel":-1,
  "pacman_start_x": 17,
- "pacman_start_y":23,
+ "pacman_start_y":31,
  "ghosts": {
        "Blinky": {
               "start_x": 1,

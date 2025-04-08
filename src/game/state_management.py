@@ -10,6 +10,10 @@ class GameState:
         self.__current_direction = ""
         self.__next_direction = ""
         self.__pacman_pos = None
+        self.__current_level = 1
+        self.__game_started = False
+        self.__show_ready = False
+        self.__ready_start_time = 0
         self.__ghosts_pos_list = None
         self.__all_ghosts = None  # Reference to all ghost instances
 
@@ -84,3 +88,35 @@ class GameState:
     def set_all_ghosts(self, ghosts):
         """Set the list of all ghost instances"""
         self.__all_ghosts = ghosts
+        
+    @property
+    def current_level(self):
+        return self.__current_level
+    
+    @current_level.setter
+    def current_level(self, level):
+        self.__current_level = level
+        
+    @property
+    def game_started(self):
+        return self.__game_started
+    
+    @game_started.setter
+    def game_started(self, started):
+        self.__game_started = started
+        
+    @property
+    def show_ready(self):
+        return self.__show_ready
+    
+    @show_ready.setter
+    def show_ready(self, show):
+        self.__show_ready = show
+        
+    @property
+    def ready_start_time(self):
+        return self.__ready_start_time
+    
+    @ready_start_time.setter
+    def ready_start_time(self, time):
+        self.__ready_start_time = time

@@ -201,16 +201,6 @@ class GhostManager:
     def __init__(self, game_state):
         self._game_state = game_state
         self.ghosts_list = []
-
-    def load_ghosts(self):
-        ghosts = [('Blinky', Blinky), ('Pinky', Pinky), ('Inky', Inky), ('Clyde', Clyde)]
-        for ghost_name, ghost_class in ghosts:
-            self.ghosts_list.append(ghost_class(ghost_name, self._game_state))
-        
-        # Save reference to all ghosts for parallel execution
-        self._game_state.set_all_ghosts(self.ghosts_list)
-        
-        return self.ghosts_list
         
     def copy_matrix(self):
         return [row[:] for row in self._game_state.matrix]
@@ -299,4 +289,11 @@ class GhostManager:
             ghost.update(dt)
 
 
+    def set_original_positions(self):
+        """Lưu vị trí ban đầu của các ma"""
+        self.original_pos = self._game_state.ghosts_pos_list
 
+    def reset_ghosts(self, ghost_list):
+        """Xóa tất cả ma cũ và thay thế bằng danh sách ma mới"""
+        self.ghosts_list = ghost_list
+        return self.ghosts_list
