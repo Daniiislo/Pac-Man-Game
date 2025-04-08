@@ -62,7 +62,7 @@ class AStar():
                             isValid = False
                             break
                         
-                        # Check if there's a wall
+                        # Check if there's a wall or another ghost
                         if self.walls[y + i][x + j]:
                             isValid = False
                             break
@@ -79,6 +79,9 @@ class AStar():
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
     
     def solve(self, state: State, goal_position):
+        # For dynamic ghost avoidance, limit depth
+        max_depth = 25
+        
         # Initialize the number of expanded nodes
         expanded_nodes = 0
 
@@ -139,14 +142,26 @@ class AStar():
                 current, peak = tracemalloc.get_traced_memory()
                 tracemalloc.stop()
 
-                print(f"Search Time: {end_time - start_time:.4f} seconds")
-                print(f"Memory Usage: {current / 1024:.2f} KB (current), {peak / 1024:.2f} KB (peak)")
-                print(f"Expanded Nodes: {expanded_nodes}")
+                # Only print search stats in regular pathfinding, not in dynamic avoidance
+                if len(actions) <= max_depth:
+                    print(f"Search Time: {end_time - start_time:.4f} seconds")
+                    print(f"Memory Usage: {current / 1024:.2f} KB (current), {peak / 1024:.2f} KB (peak)")
+                    print(f"Expanded Nodes: {expanded_nodes}")
                 
                 return solution
             
             # Mark node as explored
             explored.add(current_pos)
+
+            # Check depth to avoid very deep searches during dynamic avoidance
+            depth = 0
+            temp_node = node
+            while temp_node.parent is not None:
+                depth += 1
+                temp_node = temp_node.parent
+                
+            if depth >= max_depth:
+                continue
 
             # Add neighbors to frontier
             for action, position in self.neighbors(node.state):

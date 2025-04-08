@@ -1,4 +1,7 @@
 from src.algorithm.DFS import DFS
+from src.algorithm.BFS import BFS
+from src.algorithm.AStar import AStar
+from src.algorithm.UCS import UniformCostSearch
 from src.utils.algorithm_utils import State
 
 # read maze from file matrix.txt
@@ -18,10 +21,10 @@ with open('matrix.txt', 'r') as f:
 
 
 print (walls)
-dfs = DFS(walls)
+dfs = UniformCostSearch(walls)
 
-start = State((3,33))
+start = State((33,39))
 
-end = (31,1)
+end = (17,23)
 
 print(dfs.solve(start, end))

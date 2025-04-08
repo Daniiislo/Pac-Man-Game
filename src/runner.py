@@ -1,7 +1,5 @@
 import sys
-
 import pygame
-import json
 
 from src.config import *
 from src.game.state_management import GameState
@@ -32,8 +30,15 @@ class GameRun:
             self.screen.fill((0, 0, 0))
             self.gui.draw_screens()
 
+            # Update Pacman separately
+            self.gui.pacman.update(dt)
+            
+            # Update ghosts using the synchronized approach
+            self.gui.ghosts.update_ghosts(dt)
+            
+            # Draw all sprites
             self.all_sprites.draw(self.screen)
-            self.all_sprites.update(dt)
+            
             pygame.display.flip()
             dt = clock.tick(self.game_state.fps)
             dt /= 1000

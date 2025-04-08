@@ -70,4 +70,12 @@ def check_collision(pixel_x, pixel_y, direction, speed, objects_block, map_matri
 def calculate_coords(pos):
     x, y = pos
     return x * CELL_SIZE[0], y * CELL_SIZE[1]
+
+def update_matrix(matrix, pos, value, size):
+    x, y = pos
+    for i in range(size):
+        for j in range(size):
+            if 0 <= y + i < len(matrix) and 0 < x + j < len(matrix[0]):
+                matrix[y + i][x + j] = value
+
         

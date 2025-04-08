@@ -57,7 +57,7 @@ class BFS():
 
         # Start time tracking
         start_time= time.time()
-
+        
         # Start memory tracking 
         tracemalloc.start()
 
