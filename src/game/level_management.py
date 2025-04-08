@@ -1,11 +1,11 @@
-from src.sprites.Ghost import Blinky, Pinky, Inky, Clyde, Ghost
+from src.sprites.ghost import Blinky, Pinky, Inky, Clyde, Ghost
 from src.utils.algorithm_utils import State
 import pygame
 
 class StaticGhost(Ghost):
     """Static Ghost class for initial levels where ghosts don't move"""
-    def __init__(self, name, game_state, ghost_pos):
-        super().__init__(name, game_state, ghost_pos)
+    def __init__(self, name, game_state):
+        super().__init__(name, game_state)
         self.path = []
         
     def find_path(self, target_pos):
@@ -31,38 +31,38 @@ class LevelManager:
         """Returns a list of ghost classes activated for the level"""
         if level == 1:
             return {
-                'blinky': StaticGhost,
-                'pinky': StaticGhost,
-                'inky': Inky,  # Blue ghost uses BFS
-                'clyde': StaticGhost
+                'Blinky': StaticGhost,
+                'Pinky': StaticGhost,
+                'Inky': Inky,  # Blue ghost uses BFS
+                'Clyde': StaticGhost
             }
         elif level == 2:
             return {
-                'blinky': StaticGhost,
-                'pinky': Pinky,  # Pink ghost uses DFS
-                'inky': StaticGhost,
-                'clyde': StaticGhost
+                'Blinky': StaticGhost,
+                'Pinky': Pinky,  # Pink ghost uses DFS
+                'Inky': StaticGhost,
+                'Clyde': StaticGhost
             }
         elif level == 3:
             return {
-                'blinky': StaticGhost,
-                'pinky': StaticGhost,
-                'inky': StaticGhost,
-                'clyde': Clyde  # Orange ghost uses UCS
+                'Blinky': StaticGhost,
+                'Pinky': StaticGhost,
+                'Inky': StaticGhost,
+                'Clyde': Clyde  # Orange ghost uses UCS
             }
         elif level == 4:
             return {
-                'blinky': Blinky,  # Red ghost uses A*
-                'pinky': StaticGhost,
-                'inky': StaticGhost,
-                'clyde': StaticGhost
+                'Blinky': Blinky,  # Red ghost uses A*
+                'Pinky': StaticGhost,
+                'Inky': StaticGhost,
+                'Clyde': StaticGhost
             }
         else:  # Levels 5 and 6
             return {
-                'blinky': Blinky,
-                'pinky': Pinky,
-                'inky': Inky,
-                'clyde': Clyde
+                'Blinky': Blinky,
+                'Pinky': Pinky,
+                'Inky': Inky,
+                'Clyde': Clyde
             }
             
     def get_ghost_positions_for_level(self, level, original_positions):
@@ -72,32 +72,32 @@ class LevelManager:
         # Define ghost positions based on level
         # Position ghosts in the "room" like in the reference image
         if level == 1:
-            # Positions for level 1 - only blue ghost (inky) is active
-            positions['blinky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])    # Left position
-            positions['pinky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1]) # Center position
-            positions['clyde'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])   # Right position
-            positions['inky'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])      # Moving position
+            # Positions for level 1 - only blue ghost (Inky) is active
+            positions['Blinky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])    # Left position
+            positions['Pinky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1]) # Center position
+            positions['Clyde'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])   # Right position
+            positions['Inky'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])      # Moving position
 
         elif level == 2:
-            # Positions for level 2 - only pink ghost (pinky) is active
-            positions['blinky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])
-            positions['inky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1])
-            positions['clyde'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])
-            positions['pinky'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])
+            # Positions for level 2 - only pink ghost (Pinky) is active
+            positions['Blinky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])
+            positions['Inky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1])
+            positions['Clyde'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])
+            positions['Pinky'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])
             
         elif level == 3:
-            # Positions for level 3 - only orange ghost (clyde) is active
-            positions['blinky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])
-            positions['pinky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1])
-            positions['inky'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])
-            positions['clyde'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])
+            # Positions for level 3 - only orange ghost (Clyde) is active
+            positions['Blinky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])
+            positions['Pinky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1])
+            positions['Inky'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])
+            positions['Clyde'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])
             
         elif level == 4:
             # Positions for level 4 - only red ghost (blinky) is active
-            positions['inky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])
-            positions['pinky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1])
-            positions['clyde'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])
-            positions['blinky'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])
+            positions['Inky'] = (self.ghost_left_pos[0], self.ghost_left_pos[1])
+            positions['Pinky'] = (self.ghost_center_pos[0], self.ghost_center_pos[1])
+            positions['Clyde'] = (self.ghost_right_pos[0], self.ghost_right_pos[1])
+            positions['Blinky'] = (self.ghost_move_pos[0], self.ghost_move_pos[1])
         
         return positions
         
@@ -110,6 +110,6 @@ class LevelManager:
         
         for ghost_name, ghost_class in ghost_classes.items():
             ghost_pos = ghost_positions[ghost_name]
-            ghost_list.append(ghost_class(ghost_name, self.game_state, ghost_pos))
+            ghost_list.append(ghost_class(ghost_name, self.game_state))
             
         return ghost_list 

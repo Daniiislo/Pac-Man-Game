@@ -1,6 +1,6 @@
 from src.gui.pacman_map import PacmanMap
 from src.sprites.pacman import Pacman
-from src.sprites.Ghost import GhostManager
+from src.sprites.ghost import GhostManager
 from src.gui.menu import Menu
 from src.game.level_management import LevelManager
 import pygame
@@ -20,13 +20,10 @@ class ScreenManager:
         self._map_surface = self._map.render_map_surface()
         
         # Initialize pacman
-        self.pacman = Pacman(self._game_state, self._map.load_pacman_pos())
-        self._game_state.pacman_pos = self._map.load_pacman_pos()
-        
+        self.pacman = Pacman(self._game_state, self._game_state.pacman_pos)
         # Initialize ghost manager
         self.ghosts = GhostManager(self._game_state)
-        self.ghosts_pos_list = self._map.load_ghosts_pos()
-        self.ghosts.set_original_positions(self.ghosts_pos_list)
+        self.ghosts.set_original_positions()
         
         # Initialize level manager
         self.level_manager = LevelManager(self._game_state)

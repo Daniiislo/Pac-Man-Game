@@ -14,6 +14,8 @@ class GameState:
         self.__game_started = False
         self.__show_ready = False
         self.__ready_start_time = 0
+        self.__ghosts_pos_list = None
+        self.__all_ghosts = None  # Reference to all ghost instances
 
     @property
     def fps(self):
@@ -70,6 +72,22 @@ class GameState:
     @pacman_pos.setter
     def pacman_pos(self, pacman_pos):
         self.__pacman_pos = pacman_pos
+
+    @property
+    def ghosts_pos_list(self):
+        return self.__ghosts_pos_list
+    
+    @ghosts_pos_list.setter
+    def ghosts_pos_list(self, ghosts_pos_list):
+        self.__ghosts_pos_list = ghosts_pos_list
+        
+    def get_all_ghosts(self):
+        """Get a list of all ghost instances"""
+        return self.__all_ghosts or []
+    
+    def set_all_ghosts(self, ghosts):
+        """Set the list of all ghost instances"""
+        self.__all_ghosts = ghosts
         
     @property
     def current_level(self):

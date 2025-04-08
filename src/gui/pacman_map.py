@@ -3,6 +3,7 @@ import pygame
 import os
 
 from src.utils.map_utils import decode_tile_id, transform_asset, decode_map_data_to_original_id, get_json
+from src.utils.movement_ultils import update_matrix
 
 from src.config import MAP_FILE, CELL_SIZE, ASSETS_MAP, ASSETS_PATH
 
@@ -12,6 +13,10 @@ class PacmanMap:
         self.map_data = self.load_map_data()
         self.assets = self.load_assets()
         self._game_state.matrix = decode_map_data_to_original_id(self.map_data)
+        self._game_state.ghosts_pos_list = self.load_ghosts_pos()
+        self._game_state.pacman_pos = self.load_pacman_pos()
+        self.update_matrix()
+
     
     def load_map_data(self):
         map_path = f"map/{MAP_FILE}"
@@ -41,7 +46,10 @@ class PacmanMap:
             ghosts[ghost_name] = (x, y)
         return ghosts
 
-        
+    def update_matrix(self):
+        """Update game_state.matrix with the ghosts positions."""
+        for ghost_name, ghost_pos in self._game_state.ghosts_pos_list.items():
+            update_matrix(self._game_state.matrix, ghost_pos, True, 2)
 
     def render_map_surface(self):
         for layer in self.map_data.get('layers', []):

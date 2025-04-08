@@ -1,5 +1,4 @@
-from src.utils.algorithm_utils import Node, StackFrontier, State, get_neighbors, extract_path, measure_performance
-from src.config import STEP_SIZE    
+from src.utils.algorithm_utils import Node, StackFrontier, State, get_neighbors, extract_path, measure_performance 
 
 class DFS():
     def __init__(self, walls):

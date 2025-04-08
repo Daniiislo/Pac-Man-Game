@@ -1,7 +1,5 @@
 import sys
-
 import pygame
-import json
 
 from src.config import *
 from src.game.state_management import GameState
@@ -36,9 +34,15 @@ class GameRun:
 
             # Cập nhật các sprite khi game đã bắt đầu
             if self.game_state.game_started:
-                self.all_sprites.draw(self.screen)
-                self.all_sprites.update(dt)
+                # Update Pacman separately
+                self.gui.pacman.update(dt)
                 
+                # Update ghosts using the synchronized approach
+                self.gui.ghosts.update_ghosts(dt)
+                
+                # Draw all sprites
+                self.all_sprites.draw(self.screen)
+            
             pygame.display.flip()
             dt = clock.tick(self.game_state.fps) / 1000
 

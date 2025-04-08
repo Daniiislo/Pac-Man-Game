@@ -1,7 +1,4 @@
 from src.utils.algorithm_utils import Node, State, PriorityQueue, get_neighbors, extract_path, measure_performance
-from src.config import STEP_SIZE    
-import time
-import tracemalloc
 
 class AStar():
     def __init__(self, walls):
