@@ -161,8 +161,12 @@ class Menu:
         for button in self.level_buttons:
             button.draw(self.screen)
     
-    def handle_events(self):
-        for event in pygame.event.get():
+    def handle_events(self, events=None):
+        # If no events are passed, get from pygame
+        if events is None:
+            events = pygame.event.get()
+            
+        for event in events:
             if event.type == pygame.QUIT:
                 return False
                 
@@ -175,4 +179,9 @@ class Menu:
                     self.selected_level = i + 1
                     return True
         
+        # Update hover effect for all buttons with current mouse position
+        mouse_pos = pygame.mouse.get_pos()
+        for button in self.level_buttons:
+            button.check_hover(mouse_pos)
+            
         return None 
