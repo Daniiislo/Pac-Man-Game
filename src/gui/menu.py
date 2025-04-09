@@ -9,7 +9,7 @@ class Button:
         self.hover_color = hover_color
         self.text_color = text_color
         self.current_color = color
-        self.font = pygame.font.SysFont('Arial', 28, bold=True)
+        self.font = pygame.font.SysFont('Arial', 24, bold=True)
         self.is_hovered = False
         self.outline_color = outline_color
         self.border_width = 3
@@ -42,9 +42,13 @@ class Button:
         # Button outline
         pygame.draw.rect(screen, self.outline_color, self.rect, width=self.border_width, border_radius=12)
         
-        # Button text
+        # Button text - căn lề trái với padding 20px
         text_surface = self.font.render(self.text, True, self.text_color)
-        text_rect = text_surface.get_rect(center=self.rect.center)
+        text_rect = text_surface.get_rect()
+        # Đặt text_rect.left = self.rect.left + padding thay vì căn giữa
+        padding_left = 20
+        text_rect.left = self.rect.left + padding_left
+        text_rect.centery = self.rect.centery  # Vẫn giữ căn giữa theo chiều dọc
         screen.blit(text_surface, text_rect)
 
     def check_hover(self, pos):
@@ -73,9 +77,9 @@ class Menu:
         self.subtitle_font = pygame.font.SysFont('Arial', 30)
         
         # Create level buttons
-        button_width = 360
-        button_height = 60
-        button_spacing = 25
+        button_width = 320
+        button_height = 55
+        button_spacing = 20
         
         # Center buttons vertically in available space
         total_button_height = 6 * button_height + 5 * button_spacing
@@ -88,7 +92,7 @@ class Menu:
             "Level 3 - Orange Ghost (UCS)",
             "Level 4 - Red Ghost (A*)",
             "Level 5 - All Ghosts",
-            "Level 6 - All Ghosts"
+            "Level 6 - Real Game"
         ]
         
         button_colors = [
