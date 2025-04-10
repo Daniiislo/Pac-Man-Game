@@ -100,8 +100,10 @@ class Ghost(Sprite, ABC):
                 if self.path:
                     self.path.pop(0)
 
-                #check is the target_pos changed
-                if self.target_pos != self.game_state.pacman_pos:
+                # Calculate new path if:
+                # 1. No path left (self.path is empty)
+                # 2. OR the distance to pacman is too far (can add later if needed)
+                if not self.path:
                     self.target_pos = self.game_state.pacman_pos
                     # find new path
                     self.path = self.find_path(self.target_pos)
