@@ -26,7 +26,7 @@ class LevelManager:
             return {
                 'Blinky': Blinky  # A*
             }
-        else:  # Levels 5 và 6
+        else:  # Levels 5 + 6
             return {
                 'Blinky': Blinky,
                 'Pinky': Pinky,
@@ -35,7 +35,6 @@ class LevelManager:
             }
             
     def get_ghost_positions_for_level(self, level, original_positions):
-        """Trả về vị trí ma dựa trên level"""
         positions = original_positions.copy()
         
         # Set ghost positions in the middle of the "ghost room"
@@ -58,7 +57,6 @@ class LevelManager:
         return positions
         
     def create_ghosts_for_level(self, level, ghost_manager, original_positions):
-        """Tạo ma dựa trên level hiện tại"""
         ghost_classes = self.get_ghost_classes_for_level(level)
         ghost_positions = self.get_ghost_positions_for_level(level, original_positions)
         
