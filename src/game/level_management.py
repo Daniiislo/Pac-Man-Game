@@ -5,7 +5,7 @@ class LevelManager:
     def __init__(self, game_state):
         self.game_state = game_state
         self.current_level = 1
-        # Vị trí trung tâm cho ghost
+        # Center position for ghost
         self.ghost_center_pos = (17, 19)
 
     def get_ghost_classes_for_level(self, level):
