@@ -1,0 +1,25 @@
+{
+    "name": "real_game_position",
+    "pacman": {
+        "start_x": 17,
+        "start_y": 31
+    },
+    "ghosts": {
+        "Blinky": {
+            "start_x": 1,
+            "start_y": 1
+        },
+        "Pinky": {
+            "start_x": 33,
+            "start_y": 1
+        },
+        "Inky": {
+            "start_x": 1,
+            "start_y": 39
+        },
+        "Clyde": {
+            "start_x": 33,
+            "start_y": 39
+        }
+    }
+}
