@@ -5,12 +5,13 @@ import os
 from src.utils.map_utils import decode_tile_id, transform_asset, decode_map_data_to_original_id, get_json
 from src.utils.movement_ultils import update_matrix
 
-from src.config import MAP_FILE, CELL_SIZE, ASSETS_MAP, ASSETS_PATH
+from src.config import MAP_FILE, CELL_SIZE, ASSETS_MAP, ASSETS_PATH, TESTCASE
 
 class PacmanMap:
     def __init__(self, game_state):
         self._game_state = game_state
         self.map_data = self.load_map_data()
+        self.test_case_data = self.load_test_case_data()
         self.assets = self.load_assets()
         self._game_state.matrix = decode_map_data_to_original_id(self.map_data)
         self._game_state.ghosts_pos_list = self.load_ghosts_pos()
@@ -23,6 +24,10 @@ class PacmanMap:
         map_data = get_json(map_path)
         return map_data
 
+    def load_test_case_data(self):
+        test_case_path = f"map/{TESTCASE}.json"
+        test_case_data = get_json(test_case_path)
+        return test_case_data
 
     def load_assets(self):
         assets = {}
@@ -34,13 +39,13 @@ class PacmanMap:
         return assets   
 
     def load_pacman_pos(self):
-        x = self.map_data.get('pacman_start_x', 1)
-        y = self.map_data.get('pacman_start_y', 1)
+        x = self.test_case_data.get('pacman_start_x', 1)
+        y = self.test_case_data.get('pacman_start_y', 1)
         return x, y
 
     def load_ghosts_pos(self):
         ghosts = {}
-        for ghost_name, ghost_data in self.map_data.get('ghosts', {}).items():
+        for ghost_name, ghost_data in self.test_case_data.get('ghosts', {}).items():
             x = ghost_data.get('start_x', 1)
             y = ghost_data.get('start_y', 1)
             ghosts[ghost_name] = (x, y)

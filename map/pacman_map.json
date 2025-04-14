@@ -1,24 +1,4 @@
 { "compressionlevel":-1,
- "pacman_start_x": 15,
- "pacman_start_y": 15,
- "ghosts": {
-       "Blinky": {
-              "start_x": 19,
-              "start_y": 15
-       },
-       "Pinky": {
-              "start_x": 31,
-              "start_y": 19
-       },
-       "Inky": {
-              "start_x": 17,
-              "start_y": 17
-       },
-       "Clyde": {
-              "start_x": 19,
-              "start_y": 19
-       }
- },
  "height":42,
  "infinite":false,
  "layers":[
@@ -75,19 +55,19 @@
          "x":0,
          "y":0
         }],
-       "nextlayerid":2,
-       "nextobjectid":1,
-       "orientation":"orthogonal",
-       "renderorder":"right-down",
-       "tiledversion":"1.11.2",
-       "tileheight":8,
-       "tilesets":[
-              {
-              "firstgid":1,
-              "source":"C:\/Users\/Daniislo\/Downloads\/pacman_tilsets.tsx"
-              }],
-       "tilewidth":8,
-       "type":"map",
-       "version":"1.10",
-       "width":36
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.2",
+ "tileheight":8,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"C:\/Users\/Daniislo\/Downloads\/pacman_tilsets.tsx"
+        }],
+ "tilewidth":8,
+ "type":"map",
+ "version":"1.10",
+ "width":36
 }

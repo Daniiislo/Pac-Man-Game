@@ -9,7 +9,8 @@ GHOST = (32, 32)
 GHOST_SPEED = 1
 FPS = 60
 
-MAP_FILE = 'testcase5_map.json'
+MAP_FILE = 'pacman_map.json'
+TESTCASE='test_case_1'
 
 ASSETS_MAP = {
     1: 'big_corner.png',
