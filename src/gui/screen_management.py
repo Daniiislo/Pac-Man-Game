@@ -204,7 +204,19 @@ class ScreenManager:
             instruction_rect = instruction_text.get_rect(center=(center_x, center_y + 70))
             self._screen.blit(instruction_text, instruction_rect)
             
-            # After 60 seconds, automatically return to menu (longer time because player may want to view or screenshot)
+            # Display performance metrics for levels 1-4
+            if self._game_state.current_level in [1, 2, 3, 4]:
+                metrics_font = pygame.font.SysFont('Arial', 24, bold=False)
+                search_time_text = metrics_font.render(f"Search Time: {self._game_state.search_time:.4f} seconds", True, (255, 255, 255))
+                memory_usage_text = metrics_font.render(f"Memory Usage: {self._game_state.memory_usage:.2f} KB", True, (255, 255, 255))
+                expanded_nodes_text = metrics_font.render(f"Expanded Nodes: {self._game_state.expanded_nodes}", True, (255, 255, 255))
+                
+                # Position metrics below the instruction text
+                self._screen.blit(search_time_text, (center_x - search_time_text.get_width() // 2, center_y + 110))
+                self._screen.blit(memory_usage_text, (center_x - memory_usage_text.get_width() // 2, center_y + 140))
+                self._screen.blit(expanded_nodes_text, (center_x - expanded_nodes_text.get_width() // 2, center_y + 170))
+            
+            # After 60 seconds, automatically return to menu
             if time.time() - self.game_over_start_time > 60:
                 # Use reset_game function instead of manual setup
                 self._game_state.reset_game()
