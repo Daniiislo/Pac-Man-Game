@@ -127,7 +127,7 @@ class Ghost(Sprite, ABC):
 class Blinky(Ghost):
     def __init__(self, name, game_state):
         super().__init__(name, game_state)
-        self.algorithm = BFS(self.matrix)
+        self.algorithm = BFS(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos, matrix=None):
@@ -135,7 +135,7 @@ class Blinky(Ghost):
         if matrix is None:
             matrix = self.matrix
 
-        algorithm = BFS(matrix)
+        algorithm = BFS(matrix, self.game_state)  # Use self.game_state
         
         start = State(self.ghost_pos)
         goal = target_pos
@@ -145,7 +145,7 @@ class Blinky(Ghost):
 class Pinky(Ghost):
     def __init__(self, name, game_state):
         super().__init__(name, game_state)
-        self.algorithm = DFS(self.matrix)
+        self.algorithm = DFS(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos, matrix=None):
@@ -153,7 +153,7 @@ class Pinky(Ghost):
         if matrix is None:
             matrix = self.matrix
 
-        algorithm = DFS(matrix)
+        algorithm = DFS(matrix, self.game_state)  # Use self.game_state
         
         start = State(self.ghost_pos)
         goal = target_pos
@@ -166,7 +166,7 @@ class Pinky(Ghost):
 class Inky(Ghost):
     def __init__(self, name, game_state):
         super().__init__(name, game_state)
-        self.algorithm = UniformCostSearch(self.matrix)
+        self.algorithm = UniformCostSearch(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos, matrix=None):
@@ -174,7 +174,7 @@ class Inky(Ghost):
         if matrix is None:
             matrix = self.matrix
 
-        algorithm = UniformCostSearch(matrix)
+        algorithm = UniformCostSearch(matrix, self.game_state)  # Use self.game_state
         
         start = State(self.ghost_pos)
         goal = target_pos
@@ -184,7 +184,7 @@ class Inky(Ghost):
 class Clyde(Ghost):
     def __init__(self, name, game_state):
         super().__init__(name, game_state)
-        self.algorithm = AStar(self.matrix)  
+        self.algorithm = AStar(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos, matrix=None):
@@ -192,7 +192,7 @@ class Clyde(Ghost):
         if matrix is None:
             matrix = self.matrix
 
-        algorithm = AStar(matrix)
+        algorithm = AStar(matrix, self.game_state)  # Use self.game_state
         
         start = State(self.ghost_pos)
         goal = target_pos

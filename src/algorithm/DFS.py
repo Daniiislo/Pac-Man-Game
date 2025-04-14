@@ -1,8 +1,9 @@
 from src.utils.algorithm_utils import Node, StackFrontier, State, get_neighbors, extract_path, measure_performance 
 
 class DFS():
-    def __init__(self, walls):
+    def __init__(self, walls, game_state):
         self.walls = walls
+        self.game_state = game_state  # Add reference to game_state
         self.expanded_nodes = 0
 
     def neighbors(self, state):

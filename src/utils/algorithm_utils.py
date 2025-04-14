@@ -192,14 +192,15 @@ def measure_performance(func):
         current, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
         
-        # Print performance metrics
-        print(f"Search Time: {end_time - start_time:.4f} seconds")
-        print(f"Memory Usage: {current / 1024:.2f} KB (current), {peak / 1024:.2f} KB (peak)")
-        if hasattr(self, 'expanded_nodes'):
-            print(f"Expanded Nodes: {self.expanded_nodes}")
+        # Save performance metrics to game_state
+        if hasattr(self, 'game_state'):
+            self.game_state.search_time = end_time - start_time
+            self.game_state.memory_usage = peak / 1024  # Convert to KB
+            self.game_state.expanded_nodes = getattr(self, 'expanded_nodes', 0)
+        
         
         return result
     
     return wrapper
- 
+
 
