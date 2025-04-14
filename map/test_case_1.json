@@ -1,0 +1,25 @@
+{
+    "name": "test_case_1",
+    "pacman": {
+        "start_x": 1,
+        "start_y": 1
+    },
+    "ghosts": {
+        "Blinky": {
+            "start_x": 5,
+            "start_y": 5
+        },
+        "Pinky": {
+            "start_x": 23,
+            "start_y": 23
+        },
+        "Inky": {
+            "start_x": 15,
+            "start_y": 15
+        },
+        "Clyde": {
+            "start_x": 33,
+            "start_y": 31
+        }
+    }
+} 
