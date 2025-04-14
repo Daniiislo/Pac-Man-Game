@@ -3,6 +3,7 @@ from src.sprites.pacman import Pacman
 from src.sprites.ghost import GhostManager
 from src.gui.menu import Menu
 from src.game.level_management import LevelManager
+from src.utils.screen_utils import display_performance_metrics
 import pygame
 import time
 import math
@@ -205,16 +206,7 @@ class ScreenManager:
             self._screen.blit(instruction_text, instruction_rect)
             
             # Display performance metrics for levels 1-4
-            if self._game_state.current_level in [1, 2, 3, 4]:
-                metrics_font = pygame.font.SysFont('Arial', 24, bold=False)
-                search_time_text = metrics_font.render(f"Search Time: {self._game_state.search_time:.4f} seconds", True, (255, 255, 255))
-                memory_usage_text = metrics_font.render(f"Memory Usage: {self._game_state.memory_usage:.2f} KB", True, (255, 255, 255))
-                expanded_nodes_text = metrics_font.render(f"Expanded Nodes: {self._game_state.expanded_nodes}", True, (255, 255, 255))
-                
-                # Position metrics below the instruction text
-                self._screen.blit(search_time_text, (center_x - search_time_text.get_width() // 2, center_y + 110))
-                self._screen.blit(memory_usage_text, (center_x - memory_usage_text.get_width() // 2, center_y + 140))
-                self._screen.blit(expanded_nodes_text, (center_x - expanded_nodes_text.get_width() // 2, center_y + 170))
+            display_performance_metrics(self._screen, self._game_state, center_x, center_y)
             
             # After 60 seconds, automatically return to menu
             if time.time() - self.game_over_start_time > 60:
