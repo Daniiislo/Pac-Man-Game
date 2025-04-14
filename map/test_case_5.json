@@ -4,12 +4,12 @@
     "pacman_start_y": 19,
     "ghosts": {
         "Blinky": {
-            "start_x": 25,
-            "start_y": 1
+            "start_x": 1,
+            "start_y": 19
         },
         "Pinky": {
             "start_x": 19,
-            "start_y": 5
+            "start_y": 7
         },
         "Inky": {
             "start_x": 33,
@@ -17,7 +17,7 @@
         },
         "Clyde": {
             "start_x": 19,
-            "start_y": 15
+            "start_y": 19
         }
     }
 } 

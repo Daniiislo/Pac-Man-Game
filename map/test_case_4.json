@@ -12,12 +12,12 @@
             "start_y": 7
         },
         "Inky": {
-            "start_x": 31,
-            "start_y": 11
+            "start_x": 11,
+            "start_y": 27
         },
         "Clyde": {
-            "start_x": 7,
-            "start_y": 15
+            "start_x": 11,
+            "start_y": 35
         }
     }
 } 
