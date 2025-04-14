@@ -10,11 +10,11 @@ class GameState:
         self.__current_direction = ""
         self.__next_direction = ""
         self.__pacman_pos = None
+        self.__ghosts_pos_list = None
         self.__current_level = 1
         self.__game_started = False
         self.__show_ready = False
         self.__ready_start_time = 0
-        self.__ghosts_pos_list = None
         self.__all_ghosts = None  # Reference to all ghost instances
         self.__game_over = False  # Game over state
 

@@ -77,5 +77,8 @@ def update_matrix(matrix, pos, value, size):
         for j in range(size):
             if 0 <= y + i < len(matrix) and 0 < x + j < len(matrix[0]):
                 matrix[y + i][x + j] = value
-
+                        
+def copy_matrix(matrix):
+    # deep copy the matrix
+    return [row[:] for row in matrix]
         

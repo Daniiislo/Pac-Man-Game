@@ -2,7 +2,7 @@ from pygame.sprite import Sprite
 from abc import ABC, abstractmethod
 import pygame
 
-from src.utils.movement_ultils import check_collision, calculate_coords, update_matrix
+from src.utils.movement_ultils import check_collision, calculate_coords, update_matrix, copy_matrix
 from src.sprites.sprite_configs import GHOST_PATHS
 from src.config import GHOST, CELL_SIZE, GHOST_SPEED, STEP_SIZE
 from src.utils.algorithm_utils import State
@@ -203,10 +203,6 @@ class GhostManager:
     def __init__(self, game_state):
         self._game_state = game_state
         self.ghosts_list = []
-        
-    def copy_matrix(self):
-        return [row[:] for row in self._game_state.matrix]
-    
     
     def plan_all_movements(self):
         """First phase: All ghosts plan their movements simultaneously"""
@@ -216,7 +212,7 @@ class GhostManager:
     def resolve_collisions(self):
         """Detect and resolve potential collisions between ghosts"""
         # Create a temporary matrix and mark the positions of all ghosts
-        temp_matrix = self.copy_matrix()
+        temp_matrix = copy_matrix(self._game_state.matrix)
         ghost_positions = {}
         
         # Mark the current positions of all ghosts (2x2 area)

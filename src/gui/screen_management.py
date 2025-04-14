@@ -4,6 +4,7 @@ from src.sprites.ghost import GhostManager
 from src.gui.menu import Menu
 from src.game.level_management import LevelManager
 from src.utils.screen_utils import display_performance_metrics
+from src.utils.movement_ultils import copy_matrix, update_matrix
 import pygame
 import time
 import math
@@ -21,11 +22,8 @@ class ScreenManager:
         self._map = PacmanMap(self._game_state)
         self._map_surface = self._map.render_map_surface()
         
-        # Initialize pacman
-        self.pacman = Pacman(self._game_state, self._game_state.pacman_pos)
         # Initialize ghost manager
         self.ghosts = GhostManager(self._game_state)
-        self.ghosts.set_original_positions()
         
         # Initialize level manager
         self.level_manager = LevelManager(self._game_state)
@@ -46,8 +44,6 @@ class ScreenManager:
         self.dark_overlay = pygame.Surface((self._screen.get_width(), self._screen.get_height()), pygame.SRCALPHA)
         self.dark_overlay.fill((0, 0, 0, 180))  # RGBA: Black with 70% opacity
         
-        # Add pacman to sprite group
-        self.all_sprites.add(self.pacman)
         
     def reset_screen_state(self):
         """Reset screen manager state"""
@@ -59,40 +55,45 @@ class ScreenManager:
         
         # Reset sprite groups
         self.all_sprites.empty()
-        
-        # Re-initialize map
-        self._map = PacmanMap(self._game_state)
-        self._map_surface = self._map.render_map_surface()
-        
-        # Re-initialize pacman
-        self.pacman = Pacman(self._game_state, self._game_state.pacman_pos)
-        self.all_sprites.add(self.pacman)
-        
-        # Re-initialize ghost manager
-        self.ghosts = GhostManager(self._game_state)
-        self.ghosts.set_original_positions()
-        
-    def load_level(self, level):
-        """Load game level"""
-        self._game_state.current_level = level
-        
-        # Remove all old ghosts
-        for ghost in self.ghosts.ghosts_list:
-            ghost.kill()
+
+        self._game_state.matrix = None
+        self._game_state.pacman_pos = None
+        self._game_state.ghosts_pos_list = None
+        self._game_state.current_level = 1
+
         self.ghosts.ghosts_list.clear()
+        self.pacman = None
         
+    def init_level(self, level):
+        """Init game level"""
+        self._game_state.current_level = level
+
+        # Load pacman and ghosts positions for the level from JSON file, then update game state
+        self.level_manager.load_positions_for_level(level)
+
+        # Initialize the matrix for the level
+        self._game_state.matrix = copy_matrix(self._map.original_matrix)
+        
+        ghost_classes = self.level_manager.get_ghost_classes_for_level(level)
+
         # Create new ghosts based on level
-        ghost_list = self.level_manager.create_ghosts_for_level(
-            level, 
-            self.ghosts, 
-            self.ghosts.original_pos
-        )
+        for ghost_name, ghost_class in ghost_classes.items():
+            self.ghosts.ghosts_list.append(ghost_class(ghost_name, self._game_state))
         
-        self.ghosts.reset_ghosts(ghost_list)
+        self.pacman = Pacman(self._game_state, self._game_state.pacman_pos)
+
+        self.all_sprites.add(self.pacman)
         
         # Add ghosts to sprite group
         for ghost in self.ghosts.ghosts_list:
             self.all_sprites.add(ghost)
+
+        # Update matrix with ghost positions
+        for ghost in ghost_classes.keys():
+            pos = self._game_state.ghosts_pos_list[ghost]
+            if pos:
+                update_matrix(self._game_state.matrix, pos, True, 2)
+
             
         # Set READY! state
         self._game_state.show_ready = True
@@ -110,17 +111,17 @@ class ScreenManager:
             result = self.menu.handle_events()
         
         if result is True:  # Player has selected a level
-            selected_level = self.menu.selected_level
-            self.load_level(selected_level)
+            self.init_level(self.menu.selected_level)
             return True
         elif result is False:  # Player has quit
             return False
-            
+        
+        # Result is None
         # Draw menu
         self.menu.draw()
         return None
 
-    def draw_game(self):
+    def draw_map(self):
         """Draw game screen"""
         # Draw map
         self._screen.blit(self._map_surface, (0, 0))
@@ -221,8 +222,8 @@ class ScreenManager:
             if result is False:
                 self._game_state.running = False
         else:
-            # Draw game screen
-            self.draw_game()
+            # Draw map
+            self.draw_map()
             
             # Draw all sprites in game
             self.all_sprites.draw(self._screen)

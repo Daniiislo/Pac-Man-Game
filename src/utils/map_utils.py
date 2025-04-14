@@ -53,4 +53,3 @@ def decode_map_data_to_original_id(map_data):
                         row.append(True)
             map.append(row)
     return map
-                        
