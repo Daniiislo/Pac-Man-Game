@@ -161,7 +161,7 @@ class Menu:
         logo_rect = logo_text.get_rect(center=(self.screen_width // 2, 80))
         self.screen.blit(logo_text, logo_rect)
         
-        # Draw level buttons
+        # Draw level  buttons
         for button in self.level_buttons:
             button.draw(self.screen)
     
