@@ -164,6 +164,12 @@ class Menu:
         # Draw level buttons
         for button in self.level_buttons:
             button.draw(self.screen)
+            
+        # Add note about movement restriction in levels 1-5
+        info_font = pygame.font.SysFont('Arial', 18, bold=True)
+        info_text = info_font.render("* Note: Levels 1-5 are only for observing algorithms, Pacman will not move", True, (255, 200, 50))
+        info_rect = info_text.get_rect(center=(self.screen_width // 2, self.screen_height - 80))
+        self.screen.blit(info_text, info_rect)
     
     def handle_events(self, events=None):
         # If no events are passed, get from pygame

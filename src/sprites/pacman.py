@@ -65,10 +65,21 @@ class Pacman(Sprite):
             self.current_frame_idx = 0
 
     def update_next_direction(self):
-        if self.game_state.next_direction != "" and (self.next_direction == "" or self.next_direction != self.game_state.next_direction):
-            self.next_direction = self.game_state.next_direction
+        # Only update the next direction if the current level is 6
+        if self.game_state.current_level >= 6:
+            if self.game_state.next_direction != "" and (self.next_direction == "" or self.next_direction != self.game_state.next_direction):
+                self.next_direction = self.game_state.next_direction
+        else:
+            # At levels 1-5, do not allow direction changes
+            self.next_direction = ""
+            self.game_state.next_direction = ""
+            self.move_direction = ""
 
     def move(self):
+        # If not level 6, Pacman does not move
+        if self.game_state.current_level < 6:
+            return
+        
         # check if can move to next direction, change direction
         if self.next_direction != "" and not check_collision(self.pixel_pos['x'], self.pixel_pos['y'], self.next_direction, PACMAN_SPEED, PACMAN, self.matrix):
             self.move_direction = self.next_direction
