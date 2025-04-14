@@ -214,35 +214,35 @@ class GhostManager:
             ghost.plan_movement()
             
     def resolve_collisions(self):
-        """Phát hiện và giải quyết các va chạm tiềm ẩn giữa các ghost"""
-        # Tạo ma trận tạm thời và đánh dấu vị trí của tất cả ghost
+        """Detect and resolve potential collisions between ghosts"""
+        # Create a temporary matrix and mark the positions of all ghosts
         temp_matrix = self.copy_matrix()
         ghost_positions = {}
         
-        # Đánh dấu vị trí hiện tại của tất cả ghost (vùng 2x2)
+        # Mark the current positions of all ghosts (2x2 area)
         for ghost in self.ghosts_list:
             main_pos = ghost.ghost_pos
             update_matrix(temp_matrix, main_pos, True, 2)
             ghost_positions[main_pos] = ghost
 
         
-        # Xử lý từng ghost
+        # Process each ghost
         for ghost in self.ghosts_list:
             if not ghost.next_pos:
                 continue
                 
-            # Kiểm tra va chạm với vị trí hiện tại của ghost khác
+            # Check for collision with the current position of other ghost
             collision_detected = False
             for other_ghost in self.ghosts_list:
                 if other_ghost != ghost:
-                    # Kiểm tra vùng 2x2 của next_pos có chồng lên vùng 2x2 của ghost khác không
+                    # Check if the 2x2 area of next_pos overlaps with the 2x2 area of other ghost
                     if (abs(ghost.next_pos[0] - other_ghost.ghost_pos[0]) < 2 and 
                         abs(ghost.next_pos[1] - other_ghost.ghost_pos[1]) < 2):
                         collision_detected = True
                         break
             
             if collision_detected:
-                # Tìm đường mới với ma trận đã đánh dấu
+                # Find a new path with the marked matrix
                 ghost.path = ghost.find_path(ghost.target_pos, temp_matrix)
                 if ghost.path:
                     ghost.move_direction = ghost.path[0]
@@ -252,23 +252,23 @@ class GhostManager:
                     ghost.next_pos = None
                     continue
             
-            # Kiểm tra va chạm với next_pos của ghost khác
+            # Check for collision with next_pos of other ghost
             next_pos_collision = False
             for other_ghost in self.ghosts_list:
                 if other_ghost != ghost and other_ghost.next_pos:
                     if (abs(ghost.next_pos[0] - other_ghost.next_pos[0]) < 2 and 
                         abs(ghost.next_pos[1] - other_ghost.next_pos[1]) < 2):
-                        # Thêm vị trí tranh chấp vào ma trận
+                        # Add the disputed position to the matrix
                         update_matrix(temp_matrix, ghost.next_pos, True, 2)
                         next_pos_collision = True
                         break
             
             if next_pos_collision:
 
-                # Tìm đường mới với ma trận đã đánh dấu
+                # Find new path with the marked matrix
                 ghost.path = ghost.find_path(ghost.target_pos, temp_matrix)
 
-                # Xoá vị trí tranh chấp khỏi ma trận để không ảnh hưởng đến việc tìm đường của ghost khác
+                # Remove the disputed position from the matrix to avoid affecting the pathfinding of other ghosts
                 update_matrix(temp_matrix, ghost.next_pos, False, 2)
 
                 if ghost.path:
@@ -292,10 +292,10 @@ class GhostManager:
 
 
     def set_original_positions(self):
-        """Lưu vị trí ban đầu của các ma"""
+        """Save the initial positions of the ghosts"""
         self.original_pos = self._game_state.ghosts_pos_list
 
     def reset_ghosts(self, ghost_list):
-        """Xóa tất cả ma cũ và thay thế bằng danh sách ma mới"""
+        """Remove all old ghosts and replace them with the new list of ghosts"""
         self.ghosts_list = ghost_list
         return self.ghosts_list
