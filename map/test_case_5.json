@@ -1,7 +1,9 @@
 {
     "name": "test_case_5",
-    "pacman_start_x": 29,
-    "pacman_start_y": 19,
+    "pacman": {
+        "start_x": 29,
+        "start_y": 19
+    },
     "ghosts": {
         "Blinky": {
             "start_x": 1,

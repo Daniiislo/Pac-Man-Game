@@ -39,9 +39,10 @@ class PacmanMap:
         return assets   
 
     def load_pacman_pos(self):
-        x = self.test_case_data.get('pacman_start_x', 1)
-        y = self.test_case_data.get('pacman_start_y', 1)
-        return x, y
+        pacman_data = self.test_case_data.get('pacman', {})
+        x = pacman_data.get('start_x', 1)
+        y = pacman_data.get('start_y', 1)
+        return (x, y)
 
     def load_ghosts_pos(self):
         ghosts = {}
@@ -61,7 +62,7 @@ class PacmanMap:
             x_offset = layer.get('x', 0)
             y_offset = layer.get('y', 0)
             if layer.get('type') == 'tilelayer':
-                data  = layer.get('data', [])
+                data = layer.get('data', [])
                 width = layer.get('width', 0)
                 height = layer.get('height', 0)
 
