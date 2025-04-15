@@ -17,6 +17,7 @@ class GameState:
         self.__ready_start_time = 0
         self.__all_ghosts = None  # Reference to all ghost instances
         self.__game_over = False  # Game over state
+        self.__selected_test_case = None
 
     @property
     def fps(self):
@@ -129,6 +130,14 @@ class GameState:
     @game_over.setter
     def game_over(self, game_over):
         self.__game_over = game_over
+
+    @property
+    def selected_test_case(self):
+        return self.__selected_test_case
+
+    @selected_test_case.setter
+    def selected_test_case(self, test_case):
+        self.__selected_test_case = test_case
         
     def reset_game(self):
         """Reset game state"""
@@ -140,5 +149,9 @@ class GameState:
         self.__show_ready = False
         self.__ready_start_time = 0
         self.__game_over = False
+        self.__selected_test_case = None
+        self.__pacman_pos = None
+        self.__ghosts_pos_list = None
+        self.__all_ghosts = None
+        self.__matrix = None
         
-        # Other states will be reset when loading map and ghosts

@@ -33,9 +33,19 @@ class LevelManager:
                 'Clyde': Clyde
             }
             
-    def load_positions_for_level(self, level):
-        """Load pacman and ghosts positions for the level from JSON file, then update game state"""
-        positions_path = f"map/test_case_{level}.json"
+    def load_positions_for_level(self, level, test_case=1):
+        """
+        Load pacman and ghosts positions from a JSON file, then update game state
+        
+        Args:
+            level: The game level
+            test_case: The test case number (1-5). If None, default is 1
+        """
+        # If test_case is not specified, use the level number
+        if test_case is None:
+            test_case = level
+            
+        positions_path = f"map/test_case_{test_case}.json"
         positions_data = get_json(positions_path)
 
         ghosts_pos = {}
