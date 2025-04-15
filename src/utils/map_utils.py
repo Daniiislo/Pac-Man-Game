@@ -1,6 +1,7 @@
 import pygame
-from src.config import ASSETS_MAP
 import json
+
+from src.config import ASSETS_MAP
 
 def get_json(path):
     with open(path) as f:

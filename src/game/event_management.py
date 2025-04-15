@@ -1,4 +1,3 @@
-from pygame import (K_DOWN, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, KEYDOWN, QUIT)
 import pygame
 
 class EventHandler:

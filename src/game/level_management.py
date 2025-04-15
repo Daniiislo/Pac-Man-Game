@@ -1,7 +1,7 @@
 from src.sprites.ghost import Blinky, Pinky, Inky, Clyde
-import pygame
-from src.utils.movement_ultils import update_matrix
 from src.utils.map_utils import get_json
+
+from src.config import TEST_CASE_FILE_NAME, TEST_CASE_FILE_EXTENSION
 
 class LevelManager:
     def __init__(self, game_state):
@@ -45,7 +45,7 @@ class LevelManager:
         if test_case is None:
             test_case = level
             
-        positions_path = f"map/test_case_{test_case}.json"
+        positions_path = f"map/{TEST_CASE_FILE_NAME}_{test_case}{TEST_CASE_FILE_EXTENSION}"
         positions_data = get_json(positions_path)
 
         ghosts_pos = {}

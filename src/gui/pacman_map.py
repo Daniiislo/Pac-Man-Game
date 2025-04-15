@@ -1,10 +1,9 @@
-import json
 import pygame
 import os
 
 from src.utils.map_utils import decode_tile_id, transform_asset, decode_map_data_to_original_id, get_json
 
-from src.config import MAP_FILE, CELL_SIZE, ASSETS_MAP, ASSETS_PATH, TESTCASE
+from src.config import MAP_FILE, CELL_SIZE, ASSETS_MAP, ASSETS_PATH
 
 class PacmanMap:
     def __init__(self, game_state):
