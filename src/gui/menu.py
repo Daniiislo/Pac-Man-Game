@@ -1,5 +1,4 @@
 import pygame
-from pygame import font
 
 class Button:
     def __init__(self, x, y, width, height, text, color=(0, 0, 220), hover_color=(50, 50, 255), text_color=(255, 255, 255), outline_color=(0, 0, 255)):

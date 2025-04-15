@@ -1,14 +1,13 @@
 from src.gui.pacman_map import PacmanMap
 from src.sprites.pacman import Pacman
 from src.sprites.ghost import GhostManager
-from src.gui.menu import Menu
+from src.gui.menu import Menu, TestCaseSelector
 from src.game.level_management import LevelManager
 from src.utils.screen_utils import display_performance_metrics
 from src.utils.movement_ultils import copy_matrix, update_matrix
 import pygame
 import time
 import math
-from src.gui.menu import TestCaseSelector
 
 class ScreenManager:
     def __init__(self, screen, game_state, all_sprites):

@@ -1,4 +1,3 @@
-from pygame import (K_DOWN, K_LEFT, K_RIGHT, K_UP, K_ESCAPE, KEYDOWN, QUIT)
 import pygame
 
 class EventHandler:
@@ -28,11 +27,7 @@ class EventHandler:
                 self.game_state.next_direction = 'u'
             elif event.key == pygame.K_DOWN:
                 self.game_state.next_direction = 'd'
-            # Add escape key to return to menu
-            elif event.key == pygame.K_ESCAPE:
-                self.game_state.reset_game()
-                self.screen_manager.reset_screen_state()
-                return True
+            
 
         return False
 
@@ -53,6 +48,10 @@ class EventHandler:
             if event.type == pygame.QUIT:
                 self.game_state.running = False
                 return False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.game_state.reset_game()
+                self.screen_manager.reset_screen_state()
+                return True
 
         if not self.game_state.game_started:
             # Not handling menu events here - that's done in screen_management

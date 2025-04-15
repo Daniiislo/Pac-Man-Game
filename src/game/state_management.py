@@ -1,5 +1,4 @@
 from src.config import *
-from src.config import FPS
 
 class GameState:
     def __init__(self):
@@ -154,4 +153,3 @@ class GameState:
         self.__ghosts_pos_list = None
         self.__all_ghosts = None
         self.__matrix = None
-        
