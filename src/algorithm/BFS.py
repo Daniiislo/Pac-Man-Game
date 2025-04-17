@@ -11,7 +11,7 @@ class BFS():
         return get_neighbors(self.walls, state)
     
     @measure_performance
-    def solve(self, state: State, goal_position):
+    def solve(self, state: State, goal_position, banned_position=None):
         # Initialize frontier to just the starting position
         start = Node(state=state, parent=None, action=None)
         frontier = QueueFrontier()

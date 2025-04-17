@@ -24,7 +24,7 @@ class AStar():
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
     
     @measure_performance
-    def solve(self, state: State, goal_position):
+    def solve(self, state: State, goal_position, banned_position=None):
         # Initialize frontier with priority queue
         start = Node(state=state, parent=None, action=None, cost=0)
         frontier = PriorityQueue()

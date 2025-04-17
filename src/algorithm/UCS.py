@@ -11,7 +11,7 @@ class UniformCostSearch():
         return get_neighbors(self.walls, state, include_cost=True)
     
     @measure_performance
-    def solve(self, state: State, goal_position):
+    def solve(self, state: State, goal_position, banned_position=None):
         # Initialize frontier with priority queue
         start = Node(state=state, parent=None, action=None, cost=0)
         frontier = PriorityQueue()

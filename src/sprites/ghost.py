@@ -28,6 +28,7 @@ class Ghost(Sprite, ABC):
         self.path = []
         self.move_direction = None
         self.next_pos = None
+        self.previous_pos = None
 
 
     def load_images(self):
@@ -36,7 +37,7 @@ class Ghost(Sprite, ABC):
         self.rect = self.image.get_rect(topleft=self.ghost_coords)
     
     @abstractmethod
-    def find_path(self, target_pos, matrix=None):
+    def find_path(self, target_pos, matrix=None, previous_pos=None):
         pass
 
     def get_next_pos(self, direction):
@@ -60,7 +61,7 @@ class Ghost(Sprite, ABC):
     def plan_movement(self):
         if not self.path:
             self.target_pos = self.game_state.pacman_pos
-            self.path = self.find_path(self.target_pos)
+            self.path = self.find_path(self.target_pos, previous_pos=self.previous_pos)
 
         if self.path:
             self.move_direction = self.path[0]
@@ -93,6 +94,7 @@ class Ghost(Sprite, ABC):
             
             if self.has_reached_next_pos():
                 update_matrix(self.matrix, self.ghost_pos, False, 2)
+                self.previous_pos = self.ghost_pos
                 self.ghost_pos = self.next_pos
                 self.game_state.ghosts_pos_list[self.name] = self.ghost_pos
                 update_matrix(self.matrix, self.ghost_pos, True, 2)
@@ -104,7 +106,7 @@ class Ghost(Sprite, ABC):
                 if self.target_pos != self.game_state.pacman_pos:
                     self.target_pos = self.game_state.pacman_pos
                     # find new path
-                    self.path = self.find_path(self.target_pos)
+                    self.path = self.find_path(self.target_pos, previous_pos=self.previous_pos)
 
                 if self.path:
                     self.move_direction = self.path[0]
@@ -128,7 +130,7 @@ class Blinky(Ghost):
         self.algorithm = AStar(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
-    def find_path(self, target_pos, matrix=None):
+    def find_path(self, target_pos, matrix=None, previous_pos=None):
         # Create a fresh instance of the algorithm with the current matrix
         if matrix is None:
             matrix = self.matrix
@@ -146,7 +148,7 @@ class Pinky(Ghost):
         self.algorithm = DFS(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
-    def find_path(self, target_pos, matrix=None):
+    def find_path(self, target_pos, matrix=None, previous_pos=None):
         # Create a fresh instance of the algorithm with the current matrix
         if matrix is None:
             matrix = self.matrix
@@ -155,8 +157,7 @@ class Pinky(Ghost):
         
         start = State(self.ghost_pos)
         goal = target_pos
-        
-        path = algorithm.solve(start, goal)
+        path = algorithm.solve(start, goal, previous_pos)
         if path is None or len(path) == 0:
             return []
         return path
@@ -167,7 +168,7 @@ class Inky(Ghost):
         self.algorithm = BFS(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
-    def find_path(self, target_pos, matrix=None):
+    def find_path(self, target_pos, matrix=None, previous_pos=None):
         # Create a fresh instance of the algorithm with the current matrix
         if matrix is None:
             matrix = self.matrix
@@ -185,7 +186,7 @@ class Clyde(Ghost):
         self.algorithm = UniformCostSearch(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
-    def find_path(self, target_pos, matrix=None):
+    def find_path(self, target_pos, matrix=None, previous_pos=None):
         # Create a fresh instance of the algorithm with the current matrix
         if matrix is None:
             matrix = self.matrix

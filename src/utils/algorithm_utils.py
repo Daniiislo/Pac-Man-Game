@@ -8,6 +8,9 @@ class State():
 
     def __eq__(self, other):
         return self.current_position == other.current_position
+    
+    def __ne__(self, other):
+        return self.current_position != other.current_position
 
 
 class Node():
@@ -171,7 +174,7 @@ def measure_performance(func):
     Returns:
         Wrapper function
     """
-    def wrapper(self, state, goal_position):
+    def wrapper(self, state, goal_position, banned_position=None):
         import time
         import tracemalloc
         
@@ -184,7 +187,7 @@ def measure_performance(func):
             self.expanded_nodes = 0
         
         # Call the original function
-        result = func(self, state, goal_position)
+        result = func(self, state, goal_position, banned_position)
         
         # End time and memory tracking
         end_time = time.time()

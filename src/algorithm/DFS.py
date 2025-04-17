@@ -11,7 +11,7 @@ class DFS():
         return get_neighbors(self.walls, state)
     
     @measure_performance
-    def solve(self, state: State, goal_position):
+    def solve(self, state: State, goal_position, banned_position=None):
         # Initialize frontier to just the starting position
         start = Node(state=state, parent=None, action=None)
         frontier = StackFrontier()
@@ -44,5 +44,5 @@ class DFS():
             
             for action, pos in neighbors:
                 next_state = State(current_position=pos)
-                if not frontier.contains_state(next_state) and pos not in explored:
+                if not frontier.contains_state(next_state) and pos not in explored and (pos != banned_position or node != start):
                     frontier.add(Node(state=next_state, parent=node, action=action))
