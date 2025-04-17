@@ -1,6 +1,7 @@
 import pygame
-from src.config import ASSETS_MAP
 import json
+
+from src.config import ASSETS_MAP
 
 def get_json(path):
     with open(path) as f:
@@ -53,4 +54,3 @@ def decode_map_data_to_original_id(map_data):
                         row.append(True)
             map.append(row)
     return map
-                        

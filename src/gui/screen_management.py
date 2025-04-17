@@ -1,9 +1,10 @@
 from src.gui.pacman_map import PacmanMap
 from src.sprites.pacman import Pacman
 from src.sprites.ghost import GhostManager
-from src.gui.menu import Menu
+from src.gui.menu import Menu, TestCaseSelector
 from src.game.level_management import LevelManager
 from src.utils.screen_utils import display_performance_metrics
+from src.utils.movement_ultils import copy_matrix, update_matrix
 import pygame
 import time
 import math
@@ -12,23 +13,27 @@ class ScreenManager:
     def __init__(self, screen, game_state, all_sprites):
         self._screen = screen
         self._game_state = game_state
-        self.all_sprites = all_sprites
+        self._all_sprites = all_sprites
+        
+        # Add reference to event handler
+        from src.game.event_management import EventHandler
+        self._event_handler = EventHandler(screen, game_state, self)
+        
+        # Initialize level manager
+        self.level_manager = LevelManager(game_state)
         
         # Initialize menu
         self.menu = Menu(screen, game_state)
+        
+        # Add test case selector (initialize as None)
+        self.test_case_selector = None
         
         # Initialize map
         self._map = PacmanMap(self._game_state)
         self._map_surface = self._map.render_map_surface()
         
-        # Initialize pacman
-        self.pacman = Pacman(self._game_state, self._game_state.pacman_pos)
         # Initialize ghost manager
         self.ghosts = GhostManager(self._game_state)
-        self.ghosts.set_original_positions()
-        
-        # Initialize level manager
-        self.level_manager = LevelManager(self._game_state)
         
         # Initialize font for READY!
         self.ready_font = pygame.font.SysFont('Arial', 36, bold=True)
@@ -46,8 +51,6 @@ class ScreenManager:
         self.dark_overlay = pygame.Surface((self._screen.get_width(), self._screen.get_height()), pygame.SRCALPHA)
         self.dark_overlay.fill((0, 0, 0, 180))  # RGBA: Black with 70% opacity
         
-        # Add pacman to sprite group
-        self.all_sprites.add(self.pacman)
         
     def reset_screen_state(self):
         """Reset screen manager state"""
@@ -58,41 +61,45 @@ class ScreenManager:
         self.color_value = 0
         
         # Reset sprite groups
-        self.all_sprites.empty()
-        
-        # Re-initialize map
-        self._map = PacmanMap(self._game_state)
-        self._map_surface = self._map.render_map_surface()
-        
-        # Re-initialize pacman
-        self.pacman = Pacman(self._game_state, self._game_state.pacman_pos)
-        self.all_sprites.add(self.pacman)
-        
-        # Re-initialize ghost manager
-        self.ghosts = GhostManager(self._game_state)
-        self.ghosts.set_original_positions()
-        
-    def load_level(self, level):
-        """Load game level"""
-        self._game_state.current_level = level
-        
-        # Remove all old ghosts
-        for ghost in self.ghosts.ghosts_list:
-            ghost.kill()
+        self._all_sprites.empty()
+
         self.ghosts.ghosts_list.clear()
+        self.pacman = None
+
+        # Also reset test case selector
+        self.test_case_selector = None
         
+    def init_level(self, level, test_case):
+        """Init game level with specific test case"""
+        self._game_state.current_level = level
+        self._game_state.selected_test_case = test_case
+
+        # Load pacman and ghosts positions for the level from JSON file with the specified test case
+        self.level_manager.load_positions_for_level(level, test_case)
+
+        # Initialize the matrix for the level
+        self._game_state.matrix = copy_matrix(self._map.original_matrix)
+        
+        ghost_classes = self.level_manager.get_ghost_classes_for_level(level)
+
         # Create new ghosts based on level
-        ghost_list = self.level_manager.create_ghosts_for_level(
-            level, 
-            self.ghosts, 
-            self.ghosts.original_pos
-        )
+        for ghost_name, ghost_class in ghost_classes.items():
+            self.ghosts.ghosts_list.append(ghost_class(ghost_name, self._game_state))
         
-        self.ghosts.reset_ghosts(ghost_list)
+        self.pacman = Pacman(self._game_state, self._game_state.pacman_pos)
+
+        self._all_sprites.add(self.pacman)
         
         # Add ghosts to sprite group
         for ghost in self.ghosts.ghosts_list:
-            self.all_sprites.add(ghost)
+            self._all_sprites.add(ghost)
+
+        # Update matrix with ghost positions
+        for ghost in ghost_classes.keys():
+            pos = self._game_state.ghosts_pos_list[ghost]
+            if pos:
+                update_matrix(self._game_state.matrix, pos, True, 2)
+
             
         # Set READY! state
         self._game_state.show_ready = True
@@ -103,24 +110,51 @@ class ScreenManager:
 
     def process_menu(self, events=None):
         """Process menu"""
-        # Pass events to menu to process
+        # If test case selector is active, process it instead of main menu
+        if self.test_case_selector is not None:
+            # Use event handler instead of direct method call
+            result = self._event_handler.handle_test_case_selector_events(events, self.test_case_selector)
+            
+            if result == "back":
+                # Go back to level selection
+                self.test_case_selector = None
+                return None
+            elif result is not None and 1 <= result <= 5:
+                # User selected a test case, init the level with it
+                self.init_level(self.menu.selected_level, result)
+                self.test_case_selector = None
+                return True
+            elif result is False:  # Player has quit
+                return False
+            
+            # Draw test case selector
+            self.test_case_selector.draw()
+            return None
+            
+        # Process main menu as before, but use event handler
         if events:
-            result = self.menu.handle_events(events)
+            result = self._event_handler.handle_menu_events(events, self.menu)
         else:
-            result = self.menu.handle_events()
+            events = pygame.event.get()
+            result = self._event_handler.handle_menu_events(events, self.menu)
         
         if result is True:  # Player has selected a level
-            selected_level = self.menu.selected_level
-            self.load_level(selected_level)
-            return True
+            # For levels 5 and 6, automatically use test case 6 without showing selector
+            if self.menu.selected_level in [5, 6]:
+                self.init_level(self.menu.selected_level, 6)
+                return True
+            else:
+                # For levels 1-4, show test case selector
+                self.test_case_selector = TestCaseSelector(self._screen, self._game_state, self.menu.selected_level)
+                return None
         elif result is False:  # Player has quit
             return False
-            
+        
         # Draw menu
         self.menu.draw()
         return None
 
-    def draw_game(self):
+    def draw_map(self):
         """Draw game screen"""
         # Draw map
         self._screen.blit(self._map_surface, (0, 0))
@@ -129,7 +163,7 @@ class ScreenManager:
         """Display READY! text in the center of screen"""
         if self._game_state.show_ready:
             ready_text = self.ready_font.render("READY!", True, (255, 255, 0))
-            text_rect = ready_text.get_rect(center=(self._screen.get_width() // 2, self._screen.get_height() // 2 + 40))
+            text_rect = ready_text.get_rect(center=(self._screen.get_width() // 2, self._screen.get_height() // 2 + 50))
             self._screen.blit(ready_text, text_rect)
             
             # Display for 2 seconds
@@ -221,11 +255,11 @@ class ScreenManager:
             if result is False:
                 self._game_state.running = False
         else:
-            # Draw game screen
-            self.draw_game()
+            # Draw map
+            self.draw_map()
             
             # Draw all sprites in game
-            self.all_sprites.draw(self._screen)
+            self._all_sprites.draw(self._screen)
             
             if self._game_state.game_over:
                 self.draw_game_over_message()

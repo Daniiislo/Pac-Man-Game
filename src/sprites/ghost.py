@@ -2,7 +2,7 @@ from pygame.sprite import Sprite
 from abc import ABC, abstractmethod
 import pygame
 
-from src.utils.movement_ultils import check_collision, calculate_coords, update_matrix
+from src.utils.movement_ultils import check_collision, calculate_coords, update_matrix, copy_matrix
 from src.sprites.sprite_configs import GHOST_PATHS
 from src.config import GHOST, CELL_SIZE, GHOST_SPEED, STEP_SIZE
 from src.utils.algorithm_utils import State
@@ -100,10 +100,8 @@ class Ghost(Sprite, ABC):
                 if self.path:
                     self.path.pop(0)
 
-                # Calculate new path if:
-                # 1. No path left (self.path is empty)
-                # 2. OR the distance to pacman is too far (can add later if needed)
-                if not self.path:
+                #check is the target_pos changed
+                if self.target_pos != self.game_state.pacman_pos:
                     self.target_pos = self.game_state.pacman_pos
                     # find new path
                     self.path = self.find_path(self.target_pos)
@@ -127,7 +125,7 @@ class Ghost(Sprite, ABC):
 class Blinky(Ghost):
     def __init__(self, name, game_state):
         super().__init__(name, game_state)
-        self.algorithm = BFS(self.matrix, self.game_state)
+        self.algorithm = AStar(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
     def find_path(self, target_pos, matrix=None):
@@ -135,7 +133,7 @@ class Blinky(Ghost):
         if matrix is None:
             matrix = self.matrix
 
-        algorithm = BFS(matrix, self.game_state)  # Use self.game_state
+        algorithm = AStar(matrix, self.game_state)  # Use self.game_state
         
         start = State(self.ghost_pos)
         goal = target_pos
@@ -166,6 +164,24 @@ class Pinky(Ghost):
 class Inky(Ghost):
     def __init__(self, name, game_state):
         super().__init__(name, game_state)
+        self.algorithm = BFS(self.matrix, self.game_state)
+        self.path = self.find_path(self.target_pos)
+        
+    def find_path(self, target_pos, matrix=None):
+        # Create a fresh instance of the algorithm with the current matrix
+        if matrix is None:
+            matrix = self.matrix
+
+        algorithm = BFS(matrix, self.game_state)  # Use self.game_state
+        
+        start = State(self.ghost_pos)
+        goal = target_pos
+        
+        return algorithm.solve(start, goal)
+    
+class Clyde(Ghost):
+    def __init__(self, name, game_state):
+        super().__init__(name, game_state)
         self.algorithm = UniformCostSearch(self.matrix, self.game_state)
         self.path = self.find_path(self.target_pos)
         
@@ -178,24 +194,6 @@ class Inky(Ghost):
         
         start = State(self.ghost_pos)
         goal = target_pos
-        
-        return algorithm.solve(start, goal)
-    
-class Clyde(Ghost):
-    def __init__(self, name, game_state):
-        super().__init__(name, game_state)
-        self.algorithm = AStar(self.matrix, self.game_state)
-        self.path = self.find_path(self.target_pos)
-        
-    def find_path(self, target_pos, matrix=None):
-        # Create a fresh instance of the algorithm with the current matrix
-        if matrix is None:
-            matrix = self.matrix
-
-        algorithm = AStar(matrix, self.game_state)  # Use self.game_state
-        
-        start = State(self.ghost_pos)
-        goal = target_pos
 
         return algorithm.solve(start, goal)
 
@@ -203,10 +201,6 @@ class GhostManager:
     def __init__(self, game_state):
         self._game_state = game_state
         self.ghosts_list = []
-        
-    def copy_matrix(self):
-        return [row[:] for row in self._game_state.matrix]
-    
     
     def plan_all_movements(self):
         """First phase: All ghosts plan their movements simultaneously"""
@@ -216,7 +210,7 @@ class GhostManager:
     def resolve_collisions(self):
         """Detect and resolve potential collisions between ghosts"""
         # Create a temporary matrix and mark the positions of all ghosts
-        temp_matrix = self.copy_matrix()
+        temp_matrix = copy_matrix(self._game_state.matrix)
         ghost_positions = {}
         
         # Mark the current positions of all ghosts (2x2 area)

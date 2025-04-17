@@ -13,12 +13,9 @@ class GameRun:
         pygame.display.set_caption("Pacman Game")
 
         self.game_state = GameState()
-        self.events = EventHandler(self.screen, self.game_state)
         self.all_sprites = pygame.sprite.Group()
         self.gui = ScreenManager(self.screen, self.game_state, self.all_sprites)
-        
-        # Flag to track if game has been reset
-        self.was_game_over = False
+        self.events = EventHandler(self.screen, self.game_state, self.gui)
 
     def check_collision_with_ghosts(self):
         """Kiểm tra va chạm giữa Pacman và các con ma"""
@@ -45,25 +42,8 @@ class GameRun:
             # Get all events once
             events = pygame.event.get()
             
-            # Process quit event
-            for event in events:
-                if event.type == pygame.QUIT:
-                    self.game_state.running = False
-            
-            # Process events when game has started
-            if self.game_state.game_started:
-                for event in events:
-                    self.events.handle_events(event)
-            
-            # Check if game has transitioned from game over to not game over
-            if self.was_game_over and not self.game_state.game_over:
-                # Game has been reset from game over state
-                self.gui.reset_screen_state()
-                self.was_game_over = False
-            
-            # Update current game over state
-            if self.game_state.game_over:
-                self.was_game_over = True
+            # Let EventHandler process all events
+            event_result = self.events.handle_all_events(events)
             
             self.screen.fill((0, 0, 0))
 
@@ -86,4 +66,4 @@ class GameRun:
             dt = clock.tick(self.game_state.fps) / 1000
 
         pygame.quit()
-        sys.exit()    
+        sys.exit()

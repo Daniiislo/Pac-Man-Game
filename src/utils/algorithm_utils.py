@@ -1,4 +1,3 @@
-import sys
 import heapq
 from src.config import STEP_SIZE
 

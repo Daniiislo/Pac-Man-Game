@@ -1,21 +1,12 @@
 from src.sprites.ghost import Blinky, Pinky, Inky, Clyde
-import pygame
-from src.utils.movement_ultils import update_matrix
+from src.utils.map_utils import get_json
+
+from src.config import TEST_CASE_FILE_NAME, TEST_CASE_FILE_EXTENSION
 
 class LevelManager:
     def __init__(self, game_state):
         self.game_state = game_state
-        self.current_level = 1
-        # Center position for ghost
-        self.ghost_center_pos = (17, 19)
-        # Ghost positions in the original map (just one ghost is active in level 1-4)
-        self.all_ghost_positions = {
-            'Blinky': None,
-            'Pinky': None,
-            'Inky': None,
-            'Clyde': None
-        }
-
+        
     def get_ghost_classes_for_level(self, level):
         # Each level has only one ghost active
         if level == 1:
@@ -42,45 +33,30 @@ class LevelManager:
                 'Clyde': Clyde
             }
             
-    def get_ghost_positions_for_level(self, level, original_positions):
-        positions = original_positions.copy()
+    def load_positions_for_level(self, level, test_case=1):
+        """
+        Load pacman and ghosts positions from a JSON file, then update game state
         
-        # Set ghost positions in the original map
-        for ghost_name, pos in positions.items():
-            self.all_ghost_positions[ghost_name] = pos
-        
-        # Set ghost positions in the middle of the "ghost room"
-        if level == 1:
-            # Level 1 - only Inky active
-            positions['Inky'] = self.ghost_center_pos
+        Args:
+            level: The game level
+            test_case: The test case number (1-5). If None, default is 1
+        """
+        # If test_case is not specified, use the level number
+        if test_case is None:
+            test_case = level
             
-        elif level == 2:
-            # Level 2 - only Pinky active
-            positions['Pinky'] = self.ghost_center_pos
-            
-        elif level == 3:
-            # Level 3 - only Clyde active
-            positions['Clyde'] = self.ghost_center_pos
-            
-        elif level == 4:
-            # Level 4 - only Blinky active
-            positions['Blinky'] = self.ghost_center_pos
+        positions_path = f"map/{TEST_CASE_FILE_NAME}_{test_case}{TEST_CASE_FILE_EXTENSION}"
+        positions_data = get_json(positions_path)
+
+        ghosts_pos = {}
+        for ghost_name, ghost_data in positions_data.get('ghosts', {}).items():
+            x = ghost_data.get('start_x', 1)
+            y = ghost_data.get('start_y', 1)
+            ghosts_pos[ghost_name] = (x, y)
         
-        return positions
-        
-    def create_ghosts_for_level(self, level, ghost_manager, original_positions):
-        ghost_classes = self.get_ghost_classes_for_level(level)
-        ghost_positions = self.get_ghost_positions_for_level(level, original_positions)
-        
-        # Remove all ghosts from the matrix
-        for ghost_name, pos in self.all_ghost_positions.items():
-            if pos and ghost_name not in ghost_classes:
-                update_matrix(self.game_state.matrix, pos, False, 2)
-        
-        ghost_list = []
-        
-        for ghost_name, ghost_class in ghost_classes.items():
-            ghost_pos = ghost_positions[ghost_name]
-            ghost_list.append(ghost_class(ghost_name, self.game_state))
-            
-        return ghost_list 
+        self.game_state.ghosts_pos_list = ghosts_pos
+
+        self.game_state.pacman_pos = (
+            positions_data.get('pacman', {}).get('start_x', 1),
+            positions_data.get('pacman', {}).get('start_y', 1)
+        )

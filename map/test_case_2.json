@@ -1,22 +1,24 @@
 {
     "name": "test_case_2",
-    "pacman_start_x": 7,
-    "pacman_start_y": 7,
+    "pacman": {
+        "start_x": 7,
+        "start_y": 7
+    },
     "ghosts": {
         "Blinky": {
             "start_x": 19,
             "start_y": 11
         },
         "Pinky": {
-            "start_x": 15,
-            "start_y": 7
+            "start_x": 19,
+            "start_y": 11
         },
         "Inky": {
-            "start_x": 31,
-            "start_y": 31
+            "start_x": 19,
+            "start_y": 11
         },
         "Clyde": {
-            "start_x": 33,
+            "start_x": 19,
             "start_y": 11
         }
     }
