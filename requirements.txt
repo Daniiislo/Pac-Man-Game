@@ -1,5 +1,5 @@
 # Core dependencies
-pygame==2.5.2      # Graphics and game functionality
+pygame==2.6.1      # Graphics and game functionality
 
 # Python version requirement: >=3.8
 # Make sure to use Python 3.8 or higher to run this project.
